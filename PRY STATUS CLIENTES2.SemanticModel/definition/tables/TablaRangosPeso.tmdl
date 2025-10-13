@@ -1,0 +1,66 @@
+table TablaRangosPeso
+	lineageTag: 5edf600f-9165-4895-838b-33ff6da4110a
+
+	column Rango
+		lineageTag: bfa4b442-878b-4637-b4e0-0ce1b1b71fba
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Rango]
+		sortByColumn: Orden
+
+		annotation SummarizationSetBy = Automatic
+
+	column MinPeso
+		formatString: 0
+		lineageTag: 4b1ff318-926e-43f3-8ae3-e9d4f23cd066
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MinPeso]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MaxPeso
+		formatString: 0
+		lineageTag: e10133fa-1c71-4297-94b8-d4e82335a9e6
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MaxPeso]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Orden
+		formatString: 0
+		lineageTag: 403f9504-a7a2-4478-ac30-2f1ce55fa43e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Orden]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition TablaRangosPeso = calculated
+		mode: import
+		source = ```
+				
+				DATATABLE(
+				    "Orden", INTEGER,
+				    "Rango", STRING,
+				    "MinPeso", INTEGER,
+				    "MaxPeso", INTEGER,
+				    {
+				        {1, "0 - 2 kg", 0, 2},
+				        {2, "3 - 5 kg", 3, 5},
+				        {3, "6 - 10 kg", 6, 10},
+				        {4, "11 - 15 kg", 11, 15},
+				        {5, "16 - 20 kg", 16, 20},
+				        {6, "21 - 25 kg", 21, 25},
+				        {7, "26 - 30 kg", 26, 30},
+				        {8, "31 - 35 kg", 31, 35},
+				        {9, "36 - 40 kg", 36, 40},
+				        {10, "Más de 40 kg", 41, 9999}
+				    }
+				)
+				
+				```
+
+	annotation PBI_Id = 4b921d2fecb04f058429dab9b53ac750
+

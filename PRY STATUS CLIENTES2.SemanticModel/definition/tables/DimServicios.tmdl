@@ -1,0 +1,22 @@
+table DimServicios
+	lineageTag: a082943d-cc53-4458-9273-8236da6acd39
+
+	column 'Código servicio'
+		lineageTag: 8c8b9750-4e01-45fb-8a57-af2f6ebdb17b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: CARPETA DATOS CLIENTES[Código servicio]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimServicios = calculated
+		mode: import
+		source =
+				
+				SUMMARIZE(
+				    'CARPETA DATOS CLIENTES',
+				    'CARPETA DATOS CLIENTES'[Código servicio]
+				)
+
+	annotation PBI_Id = dd7a520016684432991dfcc1368f1645
+

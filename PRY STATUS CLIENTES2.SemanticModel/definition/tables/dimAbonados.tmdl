@@ -1,0 +1,35 @@
+table dimAbonados
+	lineageTag: 025204ee-371d-4716-94ce-789d76f76371
+
+	column 'Nombre comercial open'
+		dataType: string
+		lineageTag: 49a9fc1f-6e8f-4add-9f13-a44084443cc1
+		summarizeBy: none
+		sourceColumn: Nombre comercial open
+
+		annotation SummarizationSetBy = Automatic
+
+	column Abonado
+		dataType: string
+		lineageTag: 8dd5659b-fecc-4f1f-b495-0da74bae6a12
+		summarizeBy: none
+		sourceColumn: Abonado
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimAbonados = m
+		mode: import
+		source =
+				let
+				    Origen = #"CARPETA DATOS CLIENTES",
+				    #"Otras columnas quitadas" = Table.SelectColumns(Origen,{"Nombre comercial open", "Abonado"}),
+				    #"Duplicados quitados" = Table.Distinct(#"Otras columnas quitadas", {"Abonado"}),
+				    #"Filas ordenadas" = Table.Sort(#"Duplicados quitados", {{"Nombre comercial open", Order.Ascending}, {"Abonado", Order.Ascending}}),
+				    #"Valor reemplazado" = Table.ReplaceValue(#"Filas ordenadas","JOSE ALEJANRO CONEJO MORENO","OPEN",Replacer.ReplaceText,{"Nombre comercial open"})
+				in
+				    #"Valor reemplazado"
+
+	annotation PBI_ResultType = Exception
+
+	annotation PBI_NavigationStepName = Navegación
+

@@ -1,0 +1,1232 @@
+table 1_MEDIDAS
+	lineageTag: cf560f61-3b6e-46d4-8bbc-8f711024695a
+
+
+	measure 'Total envios' = DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío])
+		formatString: 0
+		displayFolder: Medidas Base
+		lineageTag: 6991ba34-400a-4616-bde1-9573a7e082a7
+
+	measure 'Total Facturado' = SUM('CARPETA DATOS CLIENTES'[Total])
+		displayFolder: Medidas Base
+		lineageTag: 92e9885d-eff1-4889-9f86-beed511eb038
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Facturacion =
+			CALCULATE(
+			    [Total Facturado],
+			    FILTER('CARPETA DATOS CLIENTES', 'CARPETA DATOS CLIENTES'[Orden bulto]="1")
+			)
+		displayFolder: Medidas Base
+		lineageTag: ec4c7515-5332-4326-9b9e-ee7b96832c5b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Facturacion Reciente' =
+			
+			VAR _ultimafactura = CALCULATE(
+			                        MAX('CARPETA DATOS CLIENTES'[Fecha envío]),
+			                        REMOVEFILTERS('CARPETA DATOS CLIENTES')
+			                    )
+			VAR _inicioReciente = EOMONTH(
+			                        _ultimafactura,
+			                        -3
+			                    )+1
+			VAR _calculo =       CALCULATE(
+			                    [Importe Total],
+			                        KEEPFILTERS(
+			                            DATESBETWEEN(
+			                            Fecha[Fecha],
+			                            _inicioReciente,
+			                            _ultimafactura
+			                            )
+			                        )
+			                    )
+			
+			RETURN _calculo
+		displayFolder: Medidas Base
+		lineageTag: 4a3556b4-bb0d-4db9-8da4-98cc2bfc1715
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'FactAnterior 6 meses' =
+			
+			VAR _ultimafactura = CALCULATE(
+			                        MAX('CARPETA DATOS CLIENTES'[Fecha envío]),
+			                        REMOVEFILTERS('CARPETA DATOS CLIENTES')
+			                    )
+			VAR _inicioAnterior = EOMONTH(
+			                        _ultimafactura,
+			                        -9
+			                    )+1
+			VAR _finalAnterior  = EOMONTH(
+			                        _ultimafactura,
+			                        -3
+			                      )
+			VAR _calculo =       CALCULATE(
+			                    [Importe Total],
+			                        KEEPFILTERS(
+			                            DATESBETWEEN(
+			                            Fecha[Fecha],
+			                            _inicioAnterior,
+			                            _finalAnterior
+			                            )
+			                        )
+			                    )
+			
+			RETURN _calculo
+		displayFolder: Medidas Base
+		lineageTag: 701a8763-3af9-4281-b14d-19ce47badaf7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Facturacion Inicial' =
+			
+			VAR _ultimafactura = CALCULATE(
+			                        MAX('CARPETA DATOS CLIENTES'[Fecha envío]),
+			                        REMOVEFILTERS('CARPETA DATOS CLIENTES')
+			                    )
+			VAR _finalIncial = EOMONTH(
+			                        _ultimafactura,
+			                        -15
+			                    )
+			VAR _calculo =       CALCULATE(
+			                    [Importe Total],
+			                        KEEPFILTERS(
+			                            DATESBETWEEN(
+			                            Fecha[Fecha],
+			                            BLANK(),
+			                            _finalIncial
+			                            )
+			                        )
+			                    )
+			
+			RETURN _calculo
+		displayFolder: Medidas Base
+		lineageTag: c3ec3fa4-57cd-43ed-928b-9d206797778a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Nº Ab NUEVOS' =
+			
+			SUMX(
+			    dimAbonados,
+			    IF(
+			        [Facturacion Reciente] <> 0 &&
+			        [FactAnterior 6 meses] = 0 &&
+			        [FactAnterior 12 meses]= 0 &&
+			        [Facturacion Inicial] = 0,
+			        1,
+			        0
+			    )
+			)
+		formatString: 0
+		displayFolder: Status Abonado
+		lineageTag: 6df5b12f-4773-43c0-bd08-f5003d229722
+
+	measure 'Nº Ab RECUPERADOS Ultimos 12 meses' =
+			
+			SUMX(
+			    dimAbonados,
+			    IF(
+			        [Facturacion Reciente] <> 0 &&
+			        [FactAnterior 6 meses] <> 0 &&
+			        [FactAnterior 12 meses] <> 0 &&
+			        [Facturacion Inicial] = 0,
+			        1,
+			        0
+			    )
+			)
+		formatString: 0
+		displayFolder: Status Abonado
+		lineageTag: f980b3a1-3dcd-443e-a19b-e8e08b9a1456
+
+	measure 'Nº Ab FIELES' =
+			
+			SUMX(
+			    dimAbonados,
+			    IF(
+			        [Facturacion Reciente] <> 0 &&
+			        [FactAnterior 6 meses] <> 0 &&
+			        [FactAnterior 12 meses] <> 0 &&
+			        [Facturacion Inicial] <> 0,
+			        1,
+			        0
+			    )
+			)
+		formatString: 0
+		displayFolder: Status Abonado
+		lineageTag: fdf4de23-163b-4b4b-ac0f-72cf3f9d59ac
+
+	measure 'Nº Ab PERDIDOS Rec' =
+			
+			SUMX(
+			    dimAbonados,
+			    IF(
+			        [Facturacion Reciente] = 0 &&
+			        [FactAnterior 6 meses] <> 0 &&
+			        [FactAnterior 12 meses] <> 0 &&
+			        [Facturacion Inicial] <> 0,
+			        1,
+			        0
+			    )
+			)
+		formatString: 0
+		displayFolder: Status Abonado
+		lineageTag: dfe2c805-19e4-45e5-8fbd-a06d1e583d03
+
+	measure 'Nº Ab PERDIDOS Ultimos 12 meses' =
+			
+			SUMX(
+			    dimAbonados,
+			    IF(
+			        [Facturacion Reciente] = 0 &&
+			        [FactAnterior 6 meses] = 0 &&
+			        [FactAnterior 12 meses]= 0 &&
+			        [Facturacion Inicial] <> 0,
+			        1,
+			        0
+			    )
+			)
+		formatString: 0
+		displayFolder: Status Abonado
+		lineageTag: 00cf5b03-10e8-493d-8c19-4ad8f4d7141c
+
+	measure 'ESTADO ABON' = ```
+			
+			VAR _reciente = [Facturacion Reciente]
+			VAR _ultimos_6 = [FactAnterior 6 meses]
+			VAR _ultimos_12 =[FactAnterior 12 meses] 
+			VAR _inicial = [Facturacion Inicial]
+			VAR _eleccion = SWITCH(
+			                    TRUE(),
+			                    _inicial =0 && _ultimos_12 = 0 && _ultimos_6 = 0 && _reciente <> 0, "1.Nuevos",
+			                    _inicial <> 0 && _ultimos_12 <> 0 && _ultimos_6 <> 0 && _reciente <> 0, "2.Fieles",
+			                    _inicial <> 0 && _ultimos_12 = 0 && _ultimos_6 = 0 && _reciente = 0, "3.Perdidos Ultimos 12 meses",
+			                    _inicial <> 0 && _ultimos_12 <> 0 && _ultimos_6 = 0 && _reciente = 0, "4.Perdidos ultimos 6 meses",
+			                    _inicial = 0 && _ultimos_12 <> 0 && _ultimos_6 = 0 && _reciente = 0, "4.Perdidos ultimos 6 meses",
+			                    _inicial <> 0 && _ultimos_12 <> 0 && _ultimos_6 <> 0 && _reciente = 0, "5.Perdidos recientes",
+			                    _inicial = 0 && _ultimos_12 <> 0 && _ultimos_6 <> 0 && _reciente = 0, "5.Perdidos recientes",
+			                    _inicial = 0 && _ultimos_12 <> 0 && _ultimos_6 <> 0 && _reciente <> 0, "6.Recuperados Ultimos 12 meses",
+			                    _inicial = 0 && _ultimos_12 = 0 && _ultimos_6 <> 0 && _reciente = 0, "7.Recueperados Ultimos 6 meses",
+			                    _inicial = 0 && _ultimos_12 = 0 && _ultimos_6 <> 0 && _reciente <> 0, "7.Recuperados ultimos 6 meses",
+			                    _inicial <> 0 && _ultimos_12 = 0 && _ultimos_6 = 0 && _reciente <> 0, "8.Recuperados recientes",
+			                    _inicial <> 0 && _ultimos_12 <> 0 && _ultimos_6 = 0 && _reciente <> 0, "8.Recuperados recientes",
+			                     _inicial = 0 && _ultimos_12 <> 0 && _ultimos_6 = 0 && _reciente <> 0, "8.Recuperados recientes",
+			                    "9. Sin compras"
+			                )
+			
+			RETURN
+			IF(HASONEVALUE(dimAbonados[Nombre comercial open]), _eleccion
+			)
+			```
+		displayFolder: Status Abonado
+		lineageTag: 5bcaa11c-22d2-4e35-b70b-5a98c784fc5e
+
+	measure 'ESTADO ABON Numero' =
+			
+			VAR _reciente = [Facturacion Reciente]
+			VAR _anterior = [FactAnterior 6 meses]
+			VAR _inicial = [Facturacion Inicial]
+			VAR _eleccion = SWITCH(
+			                    TRUE(),
+			                    _reciente <> 0 && _anterior = 0 && _inicial = 0, 1,
+			                    _reciente <> 0 && _anterior = 0 && _inicial <> 0, 2,
+			                    _reciente <> 0 && _anterior <> 0 && _inicial = 0, 3,
+			                    _reciente <> 0 && _anterior <> 0 && _inicial <> 0, 4,
+			                    _reciente = 0 && _anterior <> 0 && _inicial <> 0, 5,
+			                    _reciente = 0 && _anterior = 0 && _inicial <> 0, 6,
+			                    _reciente = 0 && _anterior <> 0 && _inicial = 0, 3,
+			                    7
+			                )
+			
+			RETURN
+			IF(HASONEVALUE(dimAbonados[Nombre comercial open]), _eleccion
+			)
+		formatString: 0
+		displayFolder: Status Abonado
+		lineageTag: c4335bcc-6d8b-4ed8-b6e6-71b6b812a78f
+
+	measure 'Nº Ab RECUPERADOS Recientes' =
+			
+			SUMX(
+			    dimAbonados,
+			    IF(
+			        OR(
+			        [Facturacion Reciente] <> 0 &&
+			        [FactAnterior 6 meses] = 0 &&
+			        [FactAnterior 12 meses] = 0 &&
+			        [Facturacion Inicial] = 0,
+			        [Facturacion Reciente] <> 0 &&
+			        [FactAnterior 6 meses] = 0 &&
+			        [FactAnterior 12 meses] = 0 &&
+			        [Facturacion Inicial] <> 0),
+			        1,
+			        0
+			    )
+			)
+		formatString: 0
+		displayFolder: Status Abonado
+		lineageTag: f946d67b-9891-4665-9b67-510fabbef697
+
+	measure 'Nº envios Anterior 6 meses' =
+			
+			VAR _ultimafactura = CALCULATE(
+			                        MAX('CARPETA DATOS CLIENTES'[Fecha envío]),
+			                        REMOVEFILTERS('CARPETA DATOS CLIENTES')
+			                    )
+			VAR _inicioAnterior = EOMONTH(
+			                        _ultimafactura,
+			                        -9
+			                    )+1
+			VAR _finalAnterior  = EOMONTH(
+			                        _ultimafactura,
+			                        -3
+			                      )
+			VAR _calculo =       CALCULATE(
+			                    [Total envios],
+			                        KEEPFILTERS(
+			                            DATESBETWEEN(
+			                            Fecha[Fecha],
+			                            _inicioAnterior,
+			                            _finalAnterior
+			                            )
+			                        )
+			                    )
+			
+			RETURN _calculo
+		formatString: 0
+		displayFolder: Medidas Base
+		lineageTag: dcbb93fe-1340-4586-94bf-67420d77507f
+
+	measure 'Nº Envios Inicial' =
+			
+			VAR _ultimafactura = CALCULATE(
+			                        MAX('CARPETA DATOS CLIENTES'[Fecha envío]),
+			                        REMOVEFILTERS('CARPETA DATOS CLIENTES')
+			                    )
+			VAR _finalIncial = EOMONTH(
+			                        _ultimafactura,
+			                        -15
+			                    )
+			VAR _calculo =       CALCULATE(
+			                    [Total envios],
+			                        KEEPFILTERS(
+			                            DATESBETWEEN(
+			                            Fecha[Fecha],
+			                            BLANK(),
+			                            _finalIncial
+			                            )
+			                        )
+			                    )
+			
+			RETURN _calculo
+		formatString: 0
+		displayFolder: Medidas Base
+		lineageTag: aa2aac0a-388c-4a84-b289-c99326034114
+
+	measure 'Nº Envios Reciente' =
+			
+			VAR _ultimafactura = CALCULATE(
+			                        MAX('CARPETA DATOS CLIENTES'[Fecha envío]),
+			                        REMOVEFILTERS('CARPETA DATOS CLIENTES')
+			                    )
+			VAR _inicioReciente = EOMONTH(
+			                        _ultimafactura,
+			                        -3
+			                    )+1
+			VAR _calculo =       CALCULATE(
+			                    [Total envios],
+			                        KEEPFILTERS(
+			                            DATESBETWEEN(
+			                            Fecha[Fecha],
+			                            _inicioReciente,
+			                            _ultimafactura
+			                            )
+			                        )
+			                    )
+			
+			RETURN _calculo
+		formatString: 0
+		displayFolder: Medidas Base
+		lineageTag: 58819624-92aa-451b-ae1f-9993bda4fbd9
+
+	measure 'FactAnterior 12 meses' =
+			
+			VAR _ultimafactura = CALCULATE(
+			                        MAX('CARPETA DATOS CLIENTES'[Fecha envío]),
+			                        REMOVEFILTERS('CARPETA DATOS CLIENTES')
+			                    )
+			VAR _inicioAnterior = EOMONTH(
+			                        _ultimafactura,
+			                        -15
+			                    )+1
+			VAR _finalAnterior  = EOMONTH(
+			                        _ultimafactura,
+			                        -3
+			                      )
+			VAR _calculo =       CALCULATE(
+			                    [Importe Total],
+			                        KEEPFILTERS(
+			                            DATESBETWEEN(
+			                            Fecha[Fecha],
+			                            _inicioAnterior,
+			                            _finalAnterior
+			                            )
+			                        )
+			                    )
+			
+			RETURN _calculo
+		displayFolder: Medidas Base
+		lineageTag: 94a31a9d-d286-42d2-a3c0-987642239a0d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Nº envios Anterior 12 meses' =
+			
+			VAR _ultimafactura = CALCULATE(
+			                        MAX('CARPETA DATOS CLIENTES'[Fecha envío]),
+			                        REMOVEFILTERS('CARPETA DATOS CLIENTES')
+			                    )
+			VAR _inicioAnterior = EOMONTH(
+			                        _ultimafactura,
+			                        -15
+			                    )+1
+			VAR _finalAnterior  = EOMONTH(
+			                        _ultimafactura,
+			                        -3
+			                      )
+			VAR _calculo =       CALCULATE(
+			                    [Total envios],
+			                        KEEPFILTERS(
+			                            DATESBETWEEN(
+			                            Fecha[Fecha],
+			                            _inicioAnterior,
+			                            _finalAnterior
+			                            )
+			                        )
+			                    )
+			
+			RETURN _calculo
+		formatString: 0
+		displayFolder: Medidas Base
+		lineageTag: 17de2651-c763-421f-b6d0-f59de6c1970e
+
+	measure 'Nº Ab PERDIDOS Ultimos 6 meses' = ```
+			
+			SUMX(
+			    dimAbonados,
+			    IF(
+			        OR(
+			        [Facturacion Reciente] = 0 &&
+			        [FactAnterior 6 meses] = 0 &&
+			        [FactAnterior 12 meses]<> 0 &&
+			        [Facturacion Inicial] <> 0, 
+			        [Facturacion Reciente] = 0 &&
+			        [FactAnterior 6 meses] = 0 &&
+			        [FactAnterior 12 meses]<> 0 &&
+			        [Facturacion Inicial] = 0),
+			        1,
+			        0
+			    )
+			)
+			```
+		formatString: 0
+		displayFolder: Status Abonado
+		lineageTag: 340aecf0-f6a3-4b4a-a523-ee81d5715218
+
+	measure 'Nº Ab RECUPERADOS Ultimos 6 meses' =
+			
+			SUMX(
+			    dimAbonados,
+			    IF(
+			        OR(
+			        [Facturacion Reciente] <> 0 &&
+			        [FactAnterior 6 meses] <> 0 &&
+			        [FactAnterior 12 meses] = 0 &&
+			        [Facturacion Inicial] = 0,
+			        [Facturacion Reciente] = 0 &&
+			        [FactAnterior 6 meses] <> 0 &&
+			        [FactAnterior 12 meses] = 0 &&
+			        [Facturacion Inicial] = 0),
+			        1,
+			        0
+			    )
+			)
+		formatString: 0
+		displayFolder: Status Abonado
+		lineageTag: 993218f4-61c9-496a-b8fb-74cf1c5d8e9b
+
+	measure 'Fac Acumulada' = ```
+			
+			    VAR UltimaFecha= MAX(Fecha[Fecha])
+			    VAR Resultado =
+			    CALCULATE(
+			        [Importe Total],
+			        Fecha[Fecha] <= UltimaFecha
+			    )
+			    RETURN Resultado
+			```
+		displayFolder: Inteligencia de tiempo
+		lineageTag: 6714abbd-8599-4311-8990-259096eed6f8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'FacAcm Año' = ```
+			
+			    CALCULATE(
+			        [Importe Total],
+			        DATESYTD(Fecha[Fecha])
+			    )
+			```
+		displayFolder: Inteligencia de tiempo
+		lineageTag: a92e6fa1-eecd-4232-b2ca-dbe0de3de850
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'FacAcm Mes' = ```
+			
+			    CALCULATE(
+			        [Importe Total],
+			        DATESMTD(Fecha[Fecha])
+			    )
+			```
+		displayFolder: Inteligencia de tiempo
+		lineageTag: b92f959f-3aff-4615-9cf2-7fe832c8d035
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Fac Mes Anterior' =
+			
+			CALCULATE(
+			    [Importe Total],
+			    DATEADD(Fecha[Fecha], -1, MONTH)
+			)
+		displayFolder: Inteligencia de tiempo
+		lineageTag: d85b6096-3cc2-4c41-8bd3-dbd2fc82e281
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Fac Año Anterior' =
+			
+			CALCULATE(
+			    [Importe Total],
+			    DATEADD(Fecha[Fecha], -1, YEAR)
+			)
+		displayFolder: Inteligencia de tiempo
+		lineageTag: da4f0fae-3d81-40cd-a3b7-c9bf9fed7c74
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Diferencia Fac' = [Importe Total]-[Fac Año Anterior (a la fecha)]
+		displayFolder: Inteligencia de tiempo
+		lineageTag: ad69c9b5-a79b-4e72-8cc4-adc2bc9f2165
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Fac Año Anterior v1' =
+			
+			VAR FechasYearAnterior= DATEADD(Fecha[Fecha],-1, YEAR)
+			VAR FechaDiaPosterior= DATEADD(FechasYearAnterior,1,DAY)
+			RETURN
+			CALCULATE(
+			    [Importe Total],
+			    FechaDiaPosterior
+			)
+		displayFolder: Inteligencia de tiempo
+		lineageTag: d495d938-1e00-46ba-85d0-a56a7ad56ee4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Var FACT % AÑO ANT' = ([Importe Total]-[Fac Año Anterior (a la fecha)])/[Importe Total]
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Inteligencia de tiempo
+		lineageTag: 82b482f5-e8b8-4da3-ba67-1bc57f385c75
+
+	measure 'Cant Año Anterior v1' =
+			
+			VAR FechasYearAnterior= DATEADD(Fecha[Fecha],-1, YEAR)
+			VAR FechaDiaPosterior= DATEADD(FechasYearAnterior,1,DAY)
+			RETURN
+			CALCULATE(
+			    [Total envios],
+			    FechaDiaPosterior
+			)
+		formatString: 0
+		displayFolder: Inteligencia de tiempo
+		lineageTag: 46c44541-cd4c-42c6-bd3b-be0c5f8d03ca
+
+	measure 'Var CANT % AÑO ANT' = ([Total envios]-[Cantidad Año Anterior (a la fecha)])/[Total envios]
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Inteligencia de tiempo
+		lineageTag: 0f1afe60-1097-4086-b853-69b3ac5d9956
+
+	measure 'Diferencia Cant' = [Total envios]-[Cantidad Año Anterior (a la fecha)]
+		formatString: 0
+		displayFolder: Inteligencia de tiempo
+		lineageTag: 144da125-6190-4022-a381-960e20f4e0f2
+
+	measure 'FECHA ULTIMA VENTA' = MAX('CARPETA DATOS CLIENTES'[Fecha envío])
+		formatString: dd/mm/yyyy
+		displayFolder: Inteligencia de tiempo
+		lineageTag: 085041f6-3e87-4869-9edc-e34457752590
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	measure 'Cantidad Año Anterior (a la fecha)' =
+			
+			VAR FechaUltimaVta= MAX('CARPETA DATOS CLIENTES'[Fecha envío])
+			VAR FechasVenta =
+			FILTER(
+			    DATESMTD(Fecha[Fecha]),
+			    Fecha[Fecha]<= FechaUltimaVta
+			)
+			VAR FechasYearAnterior = SAMEPERIODLASTYEAR(FechasVenta)
+			VAR CantidadYearAnterior=
+			CALCULATE(
+			    [Total envios],
+			    FechasYearAnterior
+			)
+			RETURN CantidadYearAnterior
+		formatString: 0
+		displayFolder: Inteligencia de tiempo
+		lineageTag: b3a1a613-8f63-4ca0-aed0-cd78279a334c
+
+	measure 'Cantidad Año anterior V2' = ```
+			
+			    CALCULATE(
+			        [Total envios],
+			        SAMEPERIODLASTYEAR(Fecha[Fecha]
+			        ))
+			```
+		formatString: 0
+		displayFolder: Inteligencia de tiempo
+		lineageTag: fd3f0e44-ac34-42a7-aec0-5e6c9a34677d
+
+	measure 'Fac Año Anterior (a la fecha)' =
+			
+			VAR FechaUltimaVta= MAX('CARPETA DATOS CLIENTES'[Fecha envío])
+			VAR FechasVenta =
+			FILTER(
+			    DATESMTD(Fecha[Fecha]),
+			    Fecha[Fecha]<= FechaUltimaVta
+			)
+			VAR FechasYearAnterior = SAMEPERIODLASTYEAR(FechasVenta)
+			VAR CantidadYearAnterior=
+			CALCULATE(
+			    [Importe Total],
+			    FechasYearAnterior
+			)
+			RETURN CantidadYearAnterior
+		displayFolder: Inteligencia de tiempo
+		lineageTag: 97f18a8d-ae30-4317-a537-e1e67d4b101a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Titulo v actual vs v previa - años' =
+			
+			VAR _ultf= LASTNONBLANK(Fecha[Fecha],[Importe Total])
+			VAR _anioact= FORMAT(_ultf, "yyyy")
+			VAR _anioprev= FORMAT(DATE(YEAR(_ultf)-1,1,1),"yyyy")
+			RETURN
+			_anioact & " - VS - " & _anioprev
+		displayFolder: Inteligencia de tiempo
+		lineageTag: 666e849d-e5d9-4a8b-a3f2-64ee513f7dd0
+
+	measure 'Promedio Facturacion' =
+			
+			AVERAGEX(
+			    SUMMARIZE(Fecha,Fecha[MesNum],Fecha[Año]),
+			    [Importe Total]
+			)
+		formatString: #,0\ "€";-#,0\ "€";#,0\ "€"
+		lineageTag: 0488905c-7e93-4e27-9aa2-f3c1c27d144b
+
+	measure 'Promedio Envios' =
+			
+			AVERAGEX(
+			    SUMMARIZE(Fecha,Fecha[MesNum],Fecha[Año]),
+			    [Total envios]
+			)
+		lineageTag: 7c1ebac4-82fd-4237-9e79-555879048d7b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Facturación mes para tarjeta' = FORMAT([Importe Total], "€ ##0")
+		displayFolder: Tarjeta Visual
+		lineageTag: 9a5e8714-470f-49cf-8942-b19d04179b84
+
+	measure 'Variacion y Diferencia Nominal' = ```
+			
+			    FORMAT([Var FACT % AÑO ANT], "0 %") & " | " & FORMAT([Diferencia Fac], "€ ##0")
+			```
+		displayFolder: Tarjeta Visual
+		lineageTag: e11b9ee9-6db4-4c80-a28f-1896416bea48
+
+	measure 'Color barra título' = ```
+			
+			VAR _medida = [Variacion y Diferencia Nominal] 
+			VAR _color = 
+			    SWITCH( 
+			        True, 
+			        _medida = 0, "grey" , 
+			        _medida > 0, "#D0F0C0A6", 
+			        _medida < 0, "#ffcbd1A6") 
+			RETURN _color
+			```
+		formatString: 0
+		displayFolder: Tarjeta Visual
+		lineageTag: a9753e28-7aa2-48c0-ad71-bac9c3e2ea45
+
+	measure 'Color positivo y negativo' = ```
+			
+			VAR _medida = [Variacion y Diferencia Nominal] 
+			VAR _color = 
+			    SWITCH(
+			         True, 
+			         _medida = 0, "grey" , 
+			         _medida > 0, "green", 
+			         _medida < 0, "red") 
+			RETURN _color
+			```
+		formatString: 0
+		displayFolder: Tarjeta Visual
+		lineageTag: 0b4e0240-48a9-457e-b2fb-4e6e7f14fa42
+
+	measure 'Icono rojo' = ```
+			"https://upload.wikimedia.org/wikipedia/commons/0/04/Red_Arrow_Down.svg" 
+			```
+		displayFolder: Tarjeta Visual
+		lineageTag: 1270394b-36ea-4436-b920-39ff1557d305
+
+	measure 'Icono Verde' = "https://upload.wikimedia.org/wikipedia/commons/b/bd/Dark_Green_Arrow_Up.svg"
+		displayFolder: Tarjeta Visual
+		lineageTag: ac840511-cc6b-4d28-9ec9-88039ff2057f
+
+	measure 'Icono según variación' = If ([Importe Total]>[Fac Año Anterior v1],[Icono Verde],[Icono rojo])
+		displayFolder: Tarjeta Visual
+		lineageTag: 03ccfe5d-5100-4d53-83fa-e2a9f21f2e7d
+
+	measure 'Facturacion Mes' = ```
+			
+			    CALCULATE(
+			    [Importe Total],
+			    FILTER(
+			        ALL('CARPETA DATOS CLIENTES'),
+			        'CARPETA DATOS CLIENTES'[Orden bulto] = "1" 
+			        && YEAR('CARPETA DATOS CLIENTES'[Fecha envío]) = YEAR(TODAY()) && MONTH('CARPETA DATOS CLIENTES'[Fecha envío]) = MONTH(TODAY()) ) )
+			```
+		displayFolder: Medidas Base
+		lineageTag: 0ea4d0b3-72f5-4af9-b760-a01fd5278b04
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Titulo v actual vs v previa - meses' = ```
+			
+			 VAR _ultf = LASTNONBLANK(Fecha[Fecha], [Importe Total]) 
+			 VAR _mesact = FORMAT(_ultf, "MMMM yyyy") 
+			 VAR _mesprev = FORMAT(DATE(YEAR(_ultf), MONTH(_ultf)-1, 1), "MMMM yyyy") 
+			 RETURN 
+			 _mesact & " - VS - " & _mesprev
+			```
+		displayFolder: Inteligencia de tiempo
+		lineageTag: 355698d9-63b3-4f10-8411-3761a468df65
+
+	measure 'Var FACT % MES ANT' = ([Importe Total]-[Fac Mes Anterior])/[Importe Total]
+		displayFolder: Inteligencia de tiempo
+		lineageTag: 1651eab1-3d4d-44c3-94a5-b05dab49827c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Variacion y Diferencia Nominal MES' = ```
+			
+			    FORMAT([Var FACT % MES ANT], "0 %") & " | " & FORMAT([Diferencia Fac MES ANT], "€ ##0")
+			```
+		displayFolder: Tarjeta Visual
+		lineageTag: 50980c08-b645-431e-b93a-232e8e9f5f0c
+
+	measure 'Diferencia Fac MES ANT' = [Importe Total]-[Fac Mes Anterior]
+		displayFolder: Inteligencia de tiempo
+		lineageTag: 5131968f-92d2-441e-a162-d82451fe8dce
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Color barra título MES ANT' = ```
+			
+			VAR _medida = [Variacion y Diferencia Nominal MES] 
+			VAR _color = 
+			    SWITCH( 
+			        True, 
+			        _medida = 0, "grey" , 
+			        _medida > 0, "#D0F0C0A6", 
+			        _medida < 0, "#ffcbd1A6") 
+			RETURN _color
+			```
+		formatString: 0
+		displayFolder: Tarjeta Visual
+		lineageTag: fa500d98-af0d-40bb-9d78-4e5f54bf143c
+
+	measure 'Color positivo y negativo Mes Ant' = ```
+			
+			VAR _medida = [Variacion y Diferencia Nominal MES] 
+			VAR _color = 
+			    SWITCH(
+			         True, 
+			         _medida = 0, "grey" , 
+			         _medida > 0, "green", 
+			         _medida < 0, "red") 
+			RETURN _color
+			```
+		formatString: 0
+		displayFolder: Tarjeta Visual
+		lineageTag: 176bac6e-2339-4ad1-9254-9cce3edbd5d9
+
+	measure 'Icono según variación Mes' = If ([Importe Total]>[Fac Mes Anterior],[Icono Verde],[Icono rojo])
+		displayFolder: Tarjeta Visual
+		lineageTag: ce81146f-647a-4a9c-a0cc-34688b00ff9b
+
+	measure 'Facturacion TOPN y otros' =
+			
+			VAR NroSeleccionado= SELECTEDVALUE(ValorTop[ValorTop])
+			VAR TopNAbonados=
+			TOPN(
+			    NroSeleccionado,
+			    ALLSELECTED(AuxAbonadosyotros[Nombre comercial open]),
+			    [Importe Total]
+			)
+			VAR FacturacionTopNAbonadosKeep=
+			CALCULATE(
+			    [Importe Total],
+			    KEEPFILTERS(TopNAbonados)
+			)
+			VAR FacturacionTopNAbonados=
+			CALCULATE(
+			    [Importe Total],
+			    TopNAbonados
+			)
+			VAR FacturacionTotal=
+			    CALCULATE(
+			        [Importe Total],
+			        ALLSELECTED(AuxAbonadosyotros[Nombre comercial open])
+			    )
+			VAR Resultado=
+			IF(
+			    SELECTEDVALUE(AuxAbonadosyotros[Nombre comercial open])="OTROS", FacturacionTotal-FacturacionTopNAbonados,
+			    IF(
+			        ISINSCOPE(AuxAbonadosyotros[Nombre comercial open]),FacturacionTopNAbonadosKeep,
+			    FacturacionTotal
+			    )
+			)
+			RETURN Resultado
+		displayFolder: TopN
+		lineageTag: be311760-5bc9-49f5-ade6-2c7313f5db38
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Ranking = ```
+			
+			VAR NroSeleccionado = SELECTEDVALUE(ValorTop[ValorTop])
+			VAR Resultado =
+			    IF(
+			        [Facturacion TOPN y otros] <> BLANK(),
+			        RANKX(
+			            TOPN(
+			                NroSeleccionado,
+			                ALLSELECTED(AuxAbonadosyotros[Nombre comercial open]),
+			                [Importe Total]
+			            ),
+			            [Importe Total]
+			        ),
+			        BLANK()
+			    )
+			RETURN Resultado
+			
+			```
+		formatString: 0
+		displayFolder: TopN
+		lineageTag: c0d9857f-9a89-405a-851e-9c79c6c5e591
+
+	measure 'Facturacion Top Acumulado' =
+			
+			VAR RankingM= [Ranking]
+			VAR TopNAbonados=
+			TOPN(
+			    RankingM,
+			    ALLSELECTED(AuxAbonadosyotros[Nombre comercial open]),
+			    [Importe Total]
+			)
+			VAR FacturacionTopNAbonadosKeep=
+			CALCULATE(
+			    [Importe Total],
+			    KEEPFILTERS(TopNAbonados)
+			)
+			VAR FacturacionTopNAbonados=
+			CALCULATE(
+			    [Importe Total],
+			    TopNAbonados
+			)
+			VAR FacturacionTotal=
+			    CALCULATE(
+			        [Importe Total],
+			        ALLSELECTED(AuxAbonadosyotros[Nombre comercial open])
+			    )
+			VAR Resultado=
+			IF(
+			    SELECTEDVALUE(AuxAbonadosyotros[Nombre comercial open])="OTROS", FacturacionTotal-FacturacionTopNAbonados,
+			    IF(
+			        ISINSCOPE(AuxAbonadosyotros[Nombre comercial open]),FacturacionTopNAbonadosKeep,
+			    FacturacionTotal
+			    )
+			)
+			RETURN Resultado
+		displayFolder: TopN
+		lineageTag: 6b96aa89-8b1c-4f79-a3af-006a6b5434dc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Rankingv1 =
+			
+			VAR NroSeleccionado = SELECTEDVALUE(ValorTop[ValorTop])
+			VAR Resultado =
+			    IF(
+			        [Facturacion TOPN y otros] <> BLANK(),
+			        IF(
+			            ISINSCOPE(AuxAbonadosyotros[Nombre comercial open]),
+			            RANKX(
+			                TOPN(
+			                    NroSeleccionado,
+			                    ALLSELECTED(AuxAbonadosyotros[Nombre comercial open]),
+			                    [Importe Total]
+			                ),
+			                [Importe Total]
+			            ),
+			            BLANK()
+			        ),
+			        BLANK()
+			    )
+			RETURN Resultado
+		formatString: 0
+		displayFolder: TopN
+		lineageTag: b109422f-c4c3-4196-9b7f-ff3cd2295b72
+
+	measure 'Venta Mejor Dia' =
+			
+			CONCATENATEX(
+			    TOPN(
+			        1,
+			        Fecha,
+			        [Importe Total]
+			    ),
+			    FORMAT(Fecha[Fecha], "dd-mm"  & "| " & FORMAT([Importe Total],"€ #")
+			    ))
+		displayFolder: TopN
+		lineageTag: 9c274de1-d99c-44c4-962b-c5fa8f9a6fa2
+
+	measure 'Cantidad Mes Anterior' =
+			
+			CALCULATE(
+			    [Total envios],
+			    DATEADD(Fecha[Fecha], -1, MONTH)
+			)
+		formatString: 0
+		displayFolder: Inteligencia de tiempo
+		lineageTag: 3c896395-9770-4083-925c-f941f17ec644
+
+	measure 'Calendario Cantidad' = ```
+			
+			VAR vDia =
+			    SELECTEDVALUE(Fecha[DiaNum])
+			VAR vTotalCantidad=
+			    [Importe Total]
+			VAR vTotalCantidad_Format=
+			    FORMAT(vTotalCantidad, "#,0")
+			Return 
+			    vDia & UNICHAR(10) &
+			    vTotalCantidad_Format
+			```
+		displayFolder: Visualizacion Calendario
+		lineageTag: 76223315-6450-4766-a038-e6579951557b
+
+	measure Formato_Condicional =
+			
+			VAR vDia_semana=
+			    SELECTEDVALUE(Fecha[DiaSemana])
+			VAR vFDS=
+			    SWITCH(
+			        TRUE(),
+			        vDia_semana IN{1,7}, "RED",
+			        "YELLOW"
+			    )
+			RETURN
+			    vFDS
+		displayFolder: Visualizacion Calendario
+		lineageTag: 11d86f05-25c2-4c1b-b184-87293b4b2cad
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Peso bulto' = SUM('CARPETA DATOS CLIENTES'[Peso bulto])
+		formatString: 0
+		displayFolder: Pesos y volumen
+		lineageTag: 3c4859e3-f862-4cf9-a138-b731e3678a79
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure 'Peso Promedio Diario por Abonado' =
+			
+			AVERAGEX(
+			    SUMMARIZE(
+			        'CARPETA DATOS CLIENTES',
+			        dimAbonados[Nombre comercial open],
+			        Fecha[Fecha]
+			    ),
+			    [Peso bulto]
+			)
+		displayFolder: Pesos y volumen
+		lineageTag: cbc6ad9f-aeba-45cb-95ea-5ed4ab9b849f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Cantidad Envíos por Peso' = ```
+			
+			VAR PesoMin = SELECTEDVALUE(TablaRangosPeso[MinPeso])
+			VAR PesoMax = SELECTEDVALUE(TablaRangosPeso[MaxPeso])
+			
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío]),
+			    'CARPETA DATOS CLIENTES'[Peso bulto] >= PesoMin && 'CARPETA DATOS CLIENTES'[Peso bulto] <= PesoMax
+			)
+			
+			```
+		formatString: 0
+		displayFolder: Pesos y volumen
+		lineageTag: a139fe75-9686-435b-b2a8-2b0fba5e1d3a
+
+	measure '% Envíos por Peso' = ```
+			
+			VAR EnviosPorRango = 
+			    CALCULATE(
+			        COUNT('CARPETA DATOS CLIENTES'[Número envío]),
+			        'CARPETA DATOS CLIENTES'[Peso bulto] >= SELECTEDVALUE(TablaRangosPeso[MinPeso]) &&
+			        'CARPETA DATOS CLIENTES'[Peso bulto] <= SELECTEDVALUE(TablaRangosPeso[MaxPeso])
+			    )
+			
+			VAR TotalEnvios = 
+			    CALCULATE(
+			        DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío]),
+			        ALL('CARPETA DATOS CLIENTES')  -- Esto ignora los filtros para obtener el total
+			    )
+			
+			RETURN 
+			    DIVIDE(EnviosPorRango, TotalEnvios, 0)
+			
+			```
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Pesos y volumen
+		lineageTag: 84889afb-153e-42e2-89e5-935ef12ad3b9
+
+	measure 'Cantidad Envíos por Peso Final' = ```
+			
+			VAR PesoMin = MIN(TablaRangosPeso[MinPeso])
+			VAR PesoMax = MAX(TablaRangosPeso[MaxPeso])
+			
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío]),
+			    FILTER(
+			        TablaPesoConRango,
+			        TablaPesoConRango[@PesoTotal] >= PesoMin &&
+			        TablaPesoConRango[@PesoTotal] <= PesoMax
+			    )
+			)
+			
+			```
+		formatString: 0
+		displayFolder: Pesos y volumen
+		lineageTag: 7cf2c576-15e3-459f-967a-de14e70cd541
+
+	measure 'Cantidad Facturacion por Peso Final' = ```
+			
+			VAR PesoMin = MIN(TablaRangosPeso[MinPeso])
+			VAR PesoMax = MAX(TablaRangosPeso[MaxPeso])
+			
+			RETURN
+			CALCULATE(
+			    [Facturacion],
+			    FILTER(
+			        TablaPesoConRango,
+			        TablaPesoConRango[@PesoTotal] >= PesoMin &&
+			        TablaPesoConRango[@PesoTotal] <= PesoMax
+			    )
+			)
+			
+			```
+		displayFolder: Pesos y volumen
+		lineageTag: 49987eb9-a52f-4c77-b14c-1aa03802fc2f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Moda Rango de Peso' = ```
+			
+			VAR MaxEnvios = 
+			    MAXX( 
+			        VALUES(TablaRangosPeso[Rango]), 
+			        [Cantidad Envíos por Peso Final]
+			    )
+			
+			VAR RangoModa = 
+			    FILTER(
+			        TablaRangosPeso, 
+			        [Cantidad Envíos por Peso Final] = MaxEnvios
+			    )
+			
+			RETURN 
+			    CONCATENATEX(RangoModa, TablaRangosPeso[Rango])
+			
+			```
+		displayFolder: Pesos y volumen
+		lineageTag: 192ec752-8bb9-4da2-bb4a-6fadb0261853
+
+	measure '% Envíos por Rango' = ```
+			
+			VAR TotalEnvios = CALCULATE( 
+			    DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío]), 
+			    ALLSELECTED('CARPETA DATOS CLIENTES')
+			)
+			
+			RETURN 
+			DIVIDE( [Cantidad Envíos por Peso Final], TotalEnvios, 0)
+			
+			```
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Pesos y volumen
+		lineageTag: f47c2f2d-c813-4eb3-bb03-295bbbe81cc4
+
+	measure 'Cantidad Envíos por Peso Final v1' = ```
+			
+			VAR PesoMin = CALCULATE(MIN(TablaRangosPeso[MinPeso]), TablaRangosPeso)
+			VAR PesoMax = CALCULATE(MAX(TablaRangosPeso[MaxPeso]), TablaRangosPeso)
+			
+			RETURN
+			CALCULATE(
+			    [Total envios],
+			    FILTER(
+			        TablaPesoConRango,
+			        TablaPesoConRango[@PesoTotal] >= PesoMin &&
+			        TablaPesoConRango[@PesoTotal] <= PesoMax
+			    )
+			)
+			
+			```
+		formatString: 0
+		displayFolder: Pesos y volumen
+		lineageTag: 0f9dc42a-5632-459f-9bc3-c0c941b3cf06
+
+	measure 'Moda Facturacion Comunidad' = ```
+			
+			VAR MaxFacturacion = 
+			    MAXX( 
+			        VALUES(dimProvinciaFranquicia[Comunidad]), 
+			        [Facturacion]
+			    )
+			
+			VAR RangoModaF = 
+			    FILTER(
+			        dimProvinciaFranquicia, 
+			        [Facturacion] = MaxFacturacion
+			    )
+			
+			RETURN 
+			    CONCATENATEX(RangoModaF, dimProvinciaFranquicia[Comunidad], ", ")
+			
+			```
+		displayFolder: Pesos y volumen
+		lineageTag: ed6fc8e1-84eb-4bac-8c5e-31ea142b1621
+
+	measure 'Cantidad Envíos Año Anterior' = ```
+			
+			VAR PesoMin = MIN(TablaRangosPeso[MinPeso])
+			VAR PesoMax = MAX(TablaRangosPeso[MaxPeso])
+			
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío]),
+			    FILTER(
+			        TablaPesoConRango,
+			        TablaPesoConRango[@PesoTotal] >= PesoMin &&
+			        TablaPesoConRango[@PesoTotal] <= PesoMax
+			    ),
+			    SAMEPERIODLASTYEAR('Fecha'[Fecha])
+			)
+			
+			```
+		formatString: 0
+		displayFolder: Pesos y volumen
+		lineageTag: 1fb46d0a-1f22-4d3f-a0cf-40bb04671c1c
+
+	measure 'Importe Total' =
+			
+			SUMX(
+			    VALUES('CARPETA DATOS CLIENTES'[Número envío]),
+			    CALCULATE(MAX('CARPETA DATOS CLIENTES'[Total]))
+			)
+		displayFolder: Medidas Base
+		lineageTag: f36560f0-f7ab-4f26-b9c3-ec312a682fa6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Variacion vs Mes Anterior' =
+			
+			[Importe Total] - [Fac Mes Anterior]
+		displayFolder: Inteligencia de tiempo
+		lineageTag: 08952fa6-b098-4968-85ef-71b2f5c69049
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Indicador Facturacion Abonado' =
+			
+			VAR _Variacion = [Variacion vs Mes Anterior]
+			RETURN
+			    IF(
+			        _Variacion > 0,
+			        "⬆️ SUBE Facturación",
+			        IF(
+			            _Variacion < 0,
+			            "⬇️ BAJA Facturación",
+			            "↔️ NO Facturación"
+			        )
+			    )
+		displayFolder: Inteligencia de tiempo
+		lineageTag: 3ef69b1c-9f18-4377-9478-bc66f08cddb4
+
+	measure 'Filtro Slicer Indicador' =
+			
+			VAR _FiltroSeleccionado = SELECTEDVALUE('Tabla Segmentador Indicador'[Filtro])
+			VAR _IndicadorAbonado = [Indicador Facturacion Abonado]
+			RETURN
+			    IF(
+			        ISBLANK(_FiltroSeleccionado),
+			        1,  -- Si no hay selección, muestra todo
+			        IF(
+			            _FiltroSeleccionado = _IndicadorAbonado,
+			            1,  -- Si coincide con la selección, muéstralo
+			            0   -- Si no coincide, ocúltalo
+			        )
+			    )
+		formatString: 0
+		displayFolder: Status Abonado
+		lineageTag: c8832987-6266-4a31-8056-f66357a5d72a
+
+	partition 1_MEDIDAS = m
+		mode: import
+		source =
+				let
+				    Origen = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Columna1 = _t]),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(Origen,{{"Columna1", type text}}),
+				    #"Columnas quitadas" = Table.RemoveColumns(#"Tipo cambiado",{"Columna1"})
+				in
+				    #"Columnas quitadas"
+
+	annotation PBI_ResultType = Table
+

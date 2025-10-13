@@ -1,0 +1,48 @@
+relationship 21e29482-2edd-4df6-bd0b-49a87db61d0d
+	fromColumn: 'CARPETA DATOS CLIENTES'.'Fecha envío'
+	toColumn: Fecha.Fecha
+
+relationship AutoDetected_d94ff65e-9d49-4858-93f2-8650f1f4c43e
+	fromColumn: 'CARPETA DATOS CLIENTES'.Abonado
+	toColumn: dimAbonados.Abonado
+
+relationship 26f84414-d3fb-d834-c738-5e47abad3e14
+	fromColumn: 'CARPETA DATOS CLIENTES'.'Nombre comercial open'
+	toColumn: 'Estado Abonado'.'Nombre comercial open'
+
+relationship 12cdb306-530c-60d3-7816-590edb3e4ce6
+	fromColumn: dimAbonados.'Nombre comercial open'
+	toColumn: AuxAbonadosyotros.'Nombre comercial open'
+
+relationship f1694f9b-6a4e-836d-0135-e0041b8a2448
+	fromColumn: 'CARPETA DATOS CLIENTES'.'Código servicio'
+	toColumn: DimServicios.'Código servicio'
+
+relationship 1ca46d77-76fe-e56c-d91b-9624ac621e59
+	fromColumn: 'CARPETA DATOS CLIENTES'.'Código postal'
+	toColumn: dimProvinciaFranquicia.'Código postal'
+
+relationship bc363a56-d2c8-28d8-223c-eecc7ce784af
+	fromColumn: TablaPesoConRango.'Rango Peso'
+	toColumn: TablaRangosPeso.Rango
+
+relationship 9a08203d-6dd8-419d-7541-021fb8827781
+	fromColumn: TablaPesoConRango.Fecha
+	toColumn: Fecha.Fecha
+
+relationship 6944599a-7d2d-2cdd-7ba0-755373b45a26
+	fromColumn: TablaPesoConRango.'Código postal'
+	toColumn: dimProvinciaFranquicia.'Código postal'
+
+relationship 3b7a1a94-e894-7eb8-c853-90208af9baff
+	fromColumn: TablaPesoConRango.Abonado
+	toColumn: dimAbonados.Abonado
+
+relationship dc359a42-eef8-30f4-76f1-0fa447376cda
+	fromColumn: 'CARPETA DATOS CLIENTES'.'Tipo geográfico'
+	toColumn: TablaTipoGeografico.'Tipo Geografico'
+
+relationship a6c4da81-d9fd-6ef0-e610-ede3509f4374
+	fromColumn: TablaPesoConRango.'Tipo geográfico'
+	toColumn: TablaTipoGeografico.'Tipo Geografico'
+

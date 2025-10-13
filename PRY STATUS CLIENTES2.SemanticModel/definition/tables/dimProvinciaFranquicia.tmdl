@@ -1,0 +1,89 @@
+table dimProvinciaFranquicia
+	lineageTag: 68ec58de-243d-4fca-aeb8-6f4f38984d56
+
+	column 'Código postal'
+		dataType: string
+		lineageTag: 859ca48c-be86-4b31-9e79-ffaba14a6ad4
+		summarizeBy: none
+		sourceColumn: Código postal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Población
+		dataType: string
+		lineageTag: 4c5e2d8f-c65b-4fbe-9402-d1e9df9a280a
+		summarizeBy: none
+		sourceColumn: Población
+
+		annotation SummarizationSetBy = Automatic
+
+	column Provincia
+		dataType: string
+		lineageTag: 66ec6bcf-d531-4b23-b2d6-cced0929dabf
+		summarizeBy: none
+		sourceColumn: Provincia
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Franquicia destino'
+		dataType: string
+		lineageTag: 62b992e6-4875-40d7-8cab-24780b92f743
+		summarizeBy: none
+		sourceColumn: Franquicia destino
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tipo geográfico'
+		dataType: string
+		lineageTag: d567c33c-2263-440b-9dc6-27f270edd0c6
+		summarizeBy: none
+		sourceColumn: Tipo geográfico
+
+		annotation SummarizationSetBy = Automatic
+
+	column Pais
+		dataType: string
+		lineageTag: 71960bb8-2068-4778-867a-68470f5e7d02
+		summarizeBy: none
+		sourceColumn: Pais
+
+		annotation SummarizationSetBy = Automatic
+
+	column Comunidad
+		dataType: string
+		lineageTag: c2816bcc-ff75-48f1-a1b3-937708abf47b
+		summarizeBy: none
+		sourceColumn: Comunidad
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimProvinciaFranquicia = m
+		mode: import
+		source =
+				let
+				    Origen = #"CARPETA DATOS CLIENTES",
+				    #"Otras columnas quitadas" = Table.SelectColumns(Origen,{"Código postal", "Población", "Provincia", "Franquicia destino", "Tipo geográfico"}),
+				    #"Tipo cambiado1" = Table.TransformColumnTypes(#"Otras columnas quitadas",{{"Tipo geográfico", type text}}),
+				    #"Texto en mayúsculas" = Table.TransformColumns(#"Tipo cambiado1",{{"Tipo geográfico", Text.Upper, type text}}),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Texto en mayúsculas",{{"Código postal", type text}, {"Población", type text}, {"Provincia", type text}, {"Franquicia destino", type text}}),
+				    #"Duplicados quitados" = Table.Distinct(#"Tipo cambiado"),
+				    #"Columna condicional agregada" = Table.AddColumn(#"Duplicados quitados", "Pais", each if Text.StartsWith([Franquicia destino], "07") then "Portugal" else if Text.StartsWith([Franquicia destino], "08") then "Portugal" else if [Franquicia destino] = "06100" then "Extranjero" else if [Franquicia destino] = "06102" then "Extranjero" else "España"),
+				    #"Valor reemplazado" = Table.ReplaceValue(#"Columna condicional agregada",".","Inter",Replacer.ReplaceText,{"Provincia"}),
+				    #"Duplicados quitados1" = Table.Distinct(#"Valor reemplazado", {"Código postal"}),
+				    #"Filas filtradas" = Table.SelectRows(#"Duplicados quitados1", each ([Tipo geográfico] <> "INTERNACIONAL")),
+				    #"Valor reemplazado1" = Table.ReplaceValue(#"Filas filtradas","00000","28700",Replacer.ReplaceText,{"Código postal"}),
+				    #"Duplicados quitados2" = Table.Distinct(#"Valor reemplazado1", {"Código postal"}),
+				    #"Tipo cambiado2" = Table.TransformColumnTypes(#"Duplicados quitados2",{{"Provincia", type text}}),
+				    #"Texto limpio" = Table.TransformColumns(#"Tipo cambiado2",{{"Provincia", Text.Clean, type text}}),
+				    #"Texto recortado" = Table.TransformColumns(#"Texto limpio",{{"Provincia", Text.Trim, type text}}),
+				    #"Texto limpio1" = Table.TransformColumns(#"Texto recortado",{{"Provincia", Text.Clean, type text}}),
+				    #"Texto recortado1" = Table.TransformColumns(#"Texto limpio1",{{"Provincia", Text.Trim, type text}}),
+				    #"Consultas combinadas" = Table.NestedJoin(#"Texto recortado1", {"Provincia"}, PROVINCIAS, {"Provincia"}, "PROVINCIAS", JoinKind.LeftOuter),
+				    #"Se expandió PROVINCIAS" = Table.ExpandTableColumn(#"Consultas combinadas", "PROVINCIAS", {"Comunidad"}, {"Comunidad"})
+				in
+				    #"Se expandió PROVINCIAS"
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+

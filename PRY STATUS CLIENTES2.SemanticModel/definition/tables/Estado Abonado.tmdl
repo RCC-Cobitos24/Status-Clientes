@@ -1,0 +1,31 @@
+table 'Estado Abonado'
+	lineageTag: 0ffda70d-5e6b-4684-89a6-fe8903dce0c8
+
+	column 'Nombre comercial open'
+		lineageTag: eb98a896-e009-4c0f-88af-7d27f335c8e3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: dimAbonados[Nombre comercial open]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Estado Abonado'
+		lineageTag: 31c6d3f3-0952-497d-a552-65757d5f0c68
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Estado Abonado]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Estado Abonado' = calculated
+		mode: import
+		source =
+				
+				SUMMARIZE(
+				    dimAbonados,
+				    dimAbonados[Nombre comercial open],
+				    "Estado Abonado", [ESTADO ABON]
+				)
+
+	annotation PBI_Id = d7d04b6f58e74b6ab6f6bd67ab00fb67
+

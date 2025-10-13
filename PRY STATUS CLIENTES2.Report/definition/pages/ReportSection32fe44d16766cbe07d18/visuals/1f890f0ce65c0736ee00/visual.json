@@ -1,0 +1,56 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "1f890f0ce65c0736ee00",
+  "position": {
+    "x": 1016.2025316455696,
+    "y": 584.43037974683546,
+    "z": 5000,
+    "height": 121.89873417721519,
+    "width": 244.9367088607595,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "1_MEDIDAS"
+                    }
+                  },
+                  "Property": "Nº Ab PERDIDOS Ultimos 12 meses"
+                }
+              },
+              "queryRef": "1_MEDIDAS.Nº Abonados Perdidos Ant",
+              "nativeQueryRef": "Nº Ab PERDIDOS Ant"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "1_MEDIDAS"
+                  }
+                },
+                "Property": "Nº Ab PERDIDOS Ultimos 12 meses"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

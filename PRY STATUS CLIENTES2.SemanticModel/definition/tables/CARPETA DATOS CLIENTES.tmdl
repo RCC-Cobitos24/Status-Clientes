@@ -1,0 +1,189 @@
+table 'CARPETA DATOS CLIENTES'
+	lineageTag: 96e2af11-9f8b-4652-a52b-235a8f86b959
+
+	column 'Generado por'
+		dataType: string
+		lineageTag: c675de24-ca2e-4404-a5f9-c317e7bb178a
+		summarizeBy: none
+		sourceColumn: Generado por
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fecha envío'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 68342d8e-6989-490f-a6db-6250c559f707
+		summarizeBy: none
+		sourceColumn: Fecha envío
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Número envío'
+		dataType: string
+		lineageTag: 189e3677-982c-40f0-9f76-80d6fceec673
+		summarizeBy: none
+		sourceColumn: Número envío
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Código postal'
+		dataType: string
+		lineageTag: a66ccc83-dff0-4b43-b973-2913b5db0bae
+		summarizeBy: none
+		sourceColumn: Código postal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Población
+		dataType: string
+		lineageTag: 886c1945-dd4c-42d5-9736-2b0d0691abd1
+		summarizeBy: none
+		sourceColumn: Población
+
+		annotation SummarizationSetBy = Automatic
+
+	column Provincia
+		dataType: string
+		lineageTag: 28da1388-9d9b-439a-b38c-8034c1bcaec6
+		summarizeBy: none
+		sourceColumn: Provincia
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Peso bulto'
+		dataType: double
+		lineageTag: 5efb1d37-d5b3-4eae-b8c2-339cec0491bd
+		summarizeBy: sum
+		sourceColumn: Peso bulto
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Franquicia destino'
+		dataType: string
+		lineageTag: ab11b4c1-c0aa-47c9-9dbd-b99b828d1feb
+		summarizeBy: none
+		sourceColumn: Franquicia destino
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fecha entrega finalizada.1'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4e60a462-3830-4e73-a733-0164684533f2
+		summarizeBy: none
+		sourceColumn: Fecha entrega finalizada.1
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Orden bulto'
+		dataType: string
+		lineageTag: e6d511b5-9393-41eb-86a6-a47d252b1fd5
+		summarizeBy: none
+		sourceColumn: Orden bulto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Alto bulto'
+		dataType: string
+		lineageTag: c9242470-f878-45c4-9236-fbc48ce5708e
+		summarizeBy: none
+		sourceColumn: Alto bulto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ancho bulto'
+		dataType: string
+		lineageTag: 7b04169d-9250-48a0-80c7-5bb843832e79
+		summarizeBy: none
+		sourceColumn: Ancho bulto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Largo bulto'
+		dataType: string
+		lineageTag: b7299428-6095-4fc7-bbb3-1977f3d63967
+		summarizeBy: none
+		sourceColumn: Largo bulto
+
+		annotation SummarizationSetBy = Automatic
+
+	column Abonado
+		dataType: string
+		lineageTag: b84b158b-3a24-4708-9d76-311bf75a9fb6
+		summarizeBy: none
+		sourceColumn: Abonado
+
+		annotation SummarizationSetBy = Automatic
+
+	column Estado
+		dataType: string
+		lineageTag: 7a3b5af6-6547-41e8-a91b-487af323b1af
+		summarizeBy: none
+		sourceColumn: Estado
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tipo geográfico'
+		dataType: string
+		lineageTag: 2d178e41-5b2d-4837-9b51-66be653f71dd
+		summarizeBy: none
+		sourceColumn: Tipo geográfico
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Código servicio'
+		dataType: string
+		lineageTag: 70a6ada9-bbc5-4746-a95a-267647b789da
+		summarizeBy: none
+		sourceColumn: Código servicio
+
+		annotation SummarizationSetBy = Automatic
+
+	column Total
+		dataType: double
+		formatString: 0.00
+		lineageTag: 0bce1391-2a1c-4c63-8898-5c8295b01406
+		summarizeBy: sum
+		sourceColumn: Total
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nombre comercial open'
+		dataType: string
+		lineageTag: d0da11e0-3abb-4680-bc0a-bd28f664ce29
+		summarizeBy: none
+		sourceColumn: Nombre comercial open
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'CARPETA DATOS CLIENTES' = m
+		mode: import
+		source =
+				let
+				    Origen = Folder.Files("C:\Users\Usuario\Downloads\CARPETA DATOS CLIENTES"),
+				    #"Filas filtradas" = Table.SelectRows(Origen, each ([Extension] = ".xlsx")),
+				    #"Otras columnas quitadas" = Table.SelectColumns(#"Filas filtradas",{"Content"}),
+				    #"Archivos ocultos filtrados1" = Table.SelectRows(#"Otras columnas quitadas", each [Attributes]?[Hidden]? <> true),
+				    #"Invocar función personalizada1" = Table.AddColumn(#"Archivos ocultos filtrados1", "Transformar archivo", each #"Transformar archivo"([Content])),
+				    #"Otras columnas quitadas1" = Table.SelectColumns(#"Invocar función personalizada1", {"Transformar archivo"}),
+				    #"Columna de tabla expandida1" = Table.ExpandTableColumn(#"Otras columnas quitadas1", "Transformar archivo", Table.ColumnNames(#"Transformar archivo"(#"Archivo de ejemplo"))),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Columna de tabla expandida1",{{"Peso bulto", type number}})
+				in
+				    #"Tipo cambiado"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navegación
+

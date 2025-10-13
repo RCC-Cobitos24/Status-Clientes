@@ -1,0 +1,36 @@
+table 'Tabla Segmentador Indicador'
+	lineageTag: 1d9d04f6-c6dc-45e3-9066-b605aa7c9496
+
+	column Filtro
+		lineageTag: 4bb0c7ba-b8a5-4d98-9946-c469f1a45828
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Filtro]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Orden
+		formatString: 0
+		lineageTag: 88e16465-2020-4e2c-9a36-46ba019adc24
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Orden]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Tabla Segmentador Indicador' = calculated
+		mode: import
+		source =
+				
+				DATATABLE(
+				    "Filtro", STRING,
+				    "Orden", INTEGER,
+				    {
+				        {"⬆️ SUBE Facturación", 1},
+				        {"⬇️ BAJA Facturación", 2},
+				        {"↔️ NO Facturación", 3}
+				    }
+				)
+
+	annotation PBI_Id = 589d4916fdc1423091a3bcbb453884f8
+

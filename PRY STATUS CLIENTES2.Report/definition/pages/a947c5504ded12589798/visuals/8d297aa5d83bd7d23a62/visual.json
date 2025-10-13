@@ -1,0 +1,320 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "8d297aa5d83bd7d23a62",
+  "position": {
+    "x": 28.481012658227847,
+    "y": 84.303797468354432,
+    "z": 0,
+    "height": 635.69620253164555,
+    "width": 825.94936708860757
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fecha"
+                    }
+                  },
+                  "Property": "Año"
+                }
+              },
+              "queryRef": "Fecha.Año",
+              "nativeQueryRef": "Año",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fecha"
+                    }
+                  },
+                  "Property": "MesC"
+                }
+              },
+              "queryRef": "Fecha.MesC",
+              "nativeQueryRef": "MesC",
+              "active": true
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "1_MEDIDAS"
+                    }
+                  },
+                  "Property": "Importe Total"
+                }
+              },
+              "queryRef": "1_MEDIDAS.Importe Total",
+              "nativeQueryRef": "Importe Total"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "1_MEDIDAS"
+                    }
+                  },
+                  "Property": "Fac Año Anterior (a la fecha)"
+                }
+              },
+              "queryRef": "1_MEDIDAS.Fac Año Anterior (a la fecha)",
+              "nativeQueryRef": "Fac Año Anterior (a la fecha)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "1_MEDIDAS"
+                    }
+                  },
+                  "Property": "Var FACT % AÑO ANT"
+                }
+              },
+              "queryRef": "1_MEDIDAS.VARIACION % AÑO ANT",
+              "nativeQueryRef": "Var FACT % AÑO ANT"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "1_MEDIDAS"
+                    }
+                  },
+                  "Property": "Diferencia Fac"
+                }
+              },
+              "queryRef": "1_MEDIDAS.Diferencia Fac",
+              "nativeQueryRef": "Diferencia Fac"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "1_MEDIDAS"
+                    }
+                  },
+                  "Property": "Total envios"
+                }
+              },
+              "queryRef": "1_MEDIDAS.Total envios",
+              "nativeQueryRef": "Total envios"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "1_MEDIDAS"
+                    }
+                  },
+                  "Property": "Cantidad Año Anterior (a la fecha)"
+                }
+              },
+              "queryRef": "1_MEDIDAS.Cantidad Año Anterior (a la fecha)",
+              "nativeQueryRef": "Cantidad Año Anterior (a la fecha)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "1_MEDIDAS"
+                    }
+                  },
+                  "Property": "Var CANT % AÑO ANT"
+                }
+              },
+              "queryRef": "1_MEDIDAS.VARIACION Cant % AÑO ANT",
+              "nativeQueryRef": "Var CANT % AÑO ANT"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "1_MEDIDAS"
+                    }
+                  },
+                  "Property": "Diferencia Cant"
+                }
+              },
+              "queryRef": "1_MEDIDAS.Diferencia Cant",
+              "nativeQueryRef": "Diferencia Cant"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Fecha"
+                  }
+                },
+                "Property": "Año"
+              }
+            },
+            "direction": "Ascending"
+          },
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Fecha"
+                  }
+                },
+                "Property": "MesC"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "expansionStates": [
+      {
+        "roles": [
+          "Rows"
+        ],
+        "levels": [
+          {
+            "queryRefs": [
+              "Fecha.Año"
+            ],
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fecha"
+                    }
+                  },
+                  "Property": "Año"
+                }
+              }
+            ],
+            "isPinned": true
+          },
+          {
+            "queryRefs": [
+              "Fecha.MesC"
+            ],
+            "isCollapsed": true,
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fecha"
+                    }
+                  },
+                  "Property": "MesC"
+                }
+              }
+            ],
+            "isPinned": true
+          }
+        ],
+        "root": {}
+      }
+    ],
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "83.2164854162294D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "1_MEDIDAS.VARIACION % AÑO ANT"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "81.1819717100175D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "1_MEDIDAS.VARIACION Cant % AÑO ANT"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "78.21518011307151D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "1_MEDIDAS.Diferencia Cant"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "82.40509145669142D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "1_MEDIDAS.Cantidad Año Anterior (a la fecha)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "85.86076068712673D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "1_MEDIDAS.Fac Año Anterior (a la fecha)"
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

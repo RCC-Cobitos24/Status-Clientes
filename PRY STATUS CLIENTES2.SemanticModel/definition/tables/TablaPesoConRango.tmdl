@@ -1,0 +1,113 @@
+table TablaPesoConRango
+	lineageTag: c76520e5-7905-4567-93fe-4e04333ca557
+
+	column 'Número envío'
+		lineageTag: ac17981a-cdca-415f-a48c-170d5d56662e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: CARPETA DATOS CLIENTES[Número envío]
+
+		annotation SummarizationSetBy = Automatic
+
+	column @PesoTotal
+		lineageTag: 0668a6a4-8d69-4cfa-9874-e328c0787617
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [@PesoTotal]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Rango Peso'
+		lineageTag: 0f9763d8-cf16-4057-bfd7-b19a77c2d014
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Rango Peso]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fecha
+		formatString: General Date
+		lineageTag: edc41c81-a50f-42fc-bb03-ee5bc379064e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Fecha[Fecha]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Código postal'
+		lineageTag: bde04cfe-7987-48ba-9424-a3ac67a6fff5
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: CARPETA DATOS CLIENTES[Código postal]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Abonado
+		lineageTag: 094274d5-7098-42bd-ab52-680a73963621
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: CARPETA DATOS CLIENTES[Abonado]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tipo geográfico'
+		lineageTag: 954ca76f-98e6-49b9-be68-9ed5a9e05acc
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: CARPETA DATOS CLIENTES[Tipo geográfico]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Total
+		lineageTag: a8ea65cb-0c8b-476e-8c54-b4f608d6ca88
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: CARPETA DATOS CLIENTES[Total]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition TablaPesoConRango = calculated
+		mode: import
+		source = ```
+				
+				VAR TablaPesoEnvio =
+				    ADDCOLUMNS(
+				        SUMMARIZE(
+				            'CARPETA DATOS CLIENTES',
+				            Fecha[Fecha],
+				            'CARPETA DATOS CLIENTES'[Abonado],
+				            'CARPETA DATOS CLIENTES'[Código postal],
+				            'CARPETA DATOS CLIENTES'[Número envío],
+				            'CARPETA DATOS CLIENTES'[Tipo geográfico],
+				            'CARPETA DATOS CLIENTES'[Total]
+				        ),
+				        "@PesoTotal", CALCULATE(SUM('CARPETA DATOS CLIENTES'[Peso bulto]))
+				    )
+				
+				RETURN
+				ADDCOLUMNS(
+				    TablaPesoEnvio,
+				    "Rango Peso",
+				    SWITCH(
+				        TRUE(),
+				        [@PesoTotal] <= 2, "0 - 2 kg",
+				        [@PesoTotal] <= 5, "3 - 5 kg",
+				        [@PesoTotal] <= 10, "6 - 10 kg",
+				        [@PesoTotal] <= 15, "11 - 15 kg",
+				        [@PesoTotal] <= 20, "16 - 20 kg",
+				        [@PesoTotal] <= 25, "21 - 25 kg",
+				        [@PesoTotal] <= 30, "26 - 30 kg",
+				        [@PesoTotal] <= 35, "31 - 35 kg",
+				        [@PesoTotal] <= 40, "36 - 40 kg",
+				        "Más de 40 kg"
+				    )
+				)
+				
+				```
+
+	annotation PBI_Id = 7880d772847e47c7aa4e830dd380b72e
+

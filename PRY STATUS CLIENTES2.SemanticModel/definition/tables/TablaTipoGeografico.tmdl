@@ -1,0 +1,42 @@
+table TablaTipoGeografico
+	lineageTag: dce46e2f-9a8d-4e0e-bf86-e089de66d67d
+
+	column Orden
+		formatString: 0
+		lineageTag: a2c72941-b949-46d5-9ad7-eee662f0cd09
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Orden]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tipo Geografico'
+		lineageTag: ecac5050-12b8-40b3-bb01-62d0da6ef355
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Tipo Geografico]
+		sortByColumn: Orden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition TablaTipoGeografico = calculated
+		mode: import
+		source = ```
+				
+				DATATABLE(
+				    "Orden", INTEGER,
+				    "Tipo Geografico", STRING,
+				    {
+				        {1, "NACIONAL"},
+				        {2, "REGIONAL"},
+				        {3, "LIMÍTROFE"},
+				        {4, "PROVINCIAL"},
+				        {5, "OTROS"}
+				        
+				    }
+				)
+				
+				```
+
+	annotation PBI_Id = fe78fb935bbd44a1a3fa747d1f77efcf
+

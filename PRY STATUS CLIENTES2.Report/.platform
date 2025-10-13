@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "PRY STATUS CLIENTES2"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "503f27ac-4c79-46ea-9627-e8995f30005a"
+  }
+}

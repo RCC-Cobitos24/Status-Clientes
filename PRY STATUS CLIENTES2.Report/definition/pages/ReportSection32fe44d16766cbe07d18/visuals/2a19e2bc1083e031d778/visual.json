@@ -1,0 +1,56 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "2a19e2bc1083e031d778",
+  "position": {
+    "x": 374.81012658227849,
+    "y": 584.43037974683546,
+    "z": 7000,
+    "height": 121.89873417721519,
+    "width": 216.45569620253164,
+    "tabOrder": 7000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "1_MEDIDAS"
+                    }
+                  },
+                  "Property": "Nº Ab RECUPERADOS Recientes"
+                }
+              },
+              "queryRef": "1_MEDIDAS.Nº Ab RECUPERADOS Recientes",
+              "nativeQueryRef": "Nº Ab RECUPERADOS Recientes"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "1_MEDIDAS"
+                  }
+                },
+                "Property": "Nº Ab RECUPERADOS Recientes"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

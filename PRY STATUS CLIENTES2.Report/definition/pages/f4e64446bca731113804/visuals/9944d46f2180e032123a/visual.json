@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "9944d46f2180e032123a",
+  "position": {
+    "x": 605.40192926045017,
+    "y": 539.42122186495169,
+    "z": 5000,
+    "height": 113.44051446945338,
+    "width": 619.29260450160768,
+    "tabOrder": 5000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "1_MEDIDAS"
+                    }
+                  },
+                  "Property": "Moda Rango de Peso"
+                }
+              },
+              "queryRef": "1_MEDIDAS.Moda Rango de Peso",
+              "nativeQueryRef": "Moda Rango de Peso"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

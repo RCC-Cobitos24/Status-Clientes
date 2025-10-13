@@ -1,0 +1,19 @@
+DEFINE
+    MEASURE '1_MEDIDAS'[Cantidad Envíos por Peso Final Mes Anterior DATEADD] = VAR PesoMin = MIN(TablaRangosPeso[MinPeso])
+VAR PesoMax = MAX(TablaRangosPeso[MaxPeso])
+
+RETURN
+CALCULATE(
+    DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío]),
+    FILTER(
+        TablaPesoConRango,
+        TablaPesoConRango[@PesoTotal] >= PesoMin &&
+        TablaPesoConRango[@PesoTotal] <= PesoMax
+    ),
+    DATEADD(Fecha[Fecha], -1, MONTH)
+)
+
+EVALUATE
+    SUMMARIZECOLUMNS(
+        "Cantidad Envíos por Peso Final Mes Anterior DATEADD", [Cantidad Envíos por Peso Final Mes Anterior DATEADD]
+    )

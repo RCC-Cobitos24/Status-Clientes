@@ -1,0 +1,129 @@
+expression Parámetro1 = #"Archivo de ejemplo" meta [IsParameterQuery=true, BinaryIdentifier=#"Archivo de ejemplo", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 2f8ddc2a-1e25-4c71-b4b9-c9235a1bbc18
+	queryGroup: 'Transformar archivo de CARPETA DATOS CLIENTES\Consultas auxiliares'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transformar archivo de ejemplo' =
+		let
+		    Origen = Excel.Workbook(Parámetro1, null, true),
+		    #"BUSQUEDA GENERAL DE ENVIO_Sheet" = Origen{[Item="BUSQUEDA GENERAL DE ENVIO",Kind="Sheet"]}[Data],
+		    #"Encabezados promovidos" = Table.PromoteHeaders(#"BUSQUEDA GENERAL DE ENVIO_Sheet", [PromoteAllScalars=true]),
+		    #"Columnas quitadas" = Table.RemoveColumns(#"Encabezados promovidos",{"Referencia cliente", "nombre remitente", "Nombre vía", "Número vía", "nombre destinatario", "Tipo vía de direcciones punto", "Nombre vía_1", "Número vía_2", "Total bultos", "Franquicia cliente", "Código servicio retorno", "Teléfono", "Teléfono_3", "Anomalía", "Importe Nominal", "Tipo cobro", "Nombre receptor entrega finalizada", "Número Cupón gratuito"}),
+		    #"Filas filtradas" = Table.SelectRows(#"Columnas quitadas", each ([Motivo] <> "Envío borrado")),
+		    #"Columnas quitadas1" = Table.RemoveColumns(#"Filas filtradas",{"Motivo", "Usuario", "Persona contacto", "Centro de coste", "Código Mensajero recogida finaliza", "Comentario anomalía", "Fecha de estado"}),
+		    #"Columna condicional agregada" = Table.AddColumn(#"Columnas quitadas1", "Nombre comercial open", each if [Abonado] = "000000" then "OPEN" else [Nombre Comercial]),
+		    #"Columnas quitadas2" = Table.RemoveColumns(#"Columna condicional agregada",{"Nombre Comercial"}),
+		    #"Filas filtradas1" = Table.SelectRows(#"Columnas quitadas2", each ([Estado] <> "Envío cancelado" and [Estado] <> "Recogida pendiente")),
+		    #"Dividir columna por delimitador" = Table.SplitColumn(#"Filas filtradas1", "Fecha entrega finalizada", Splitter.SplitTextByEachDelimiter({" "}, QuoteStyle.Csv, false), {"Fecha entrega finalizada.1", "Fecha entrega finalizada.2"}),
+		    #"Tipo cambiado" = Table.TransformColumnTypes(#"Dividir columna por delimitador",{{"Fecha entrega finalizada.1", type date}, {"Fecha entrega finalizada.2", type time}}),
+		    #"Columnas quitadas3" = Table.RemoveColumns(#"Tipo cambiado",{"Fecha entrega finalizada.2"}),
+		    #"Tipo cambiado1" = Table.TransformColumnTypes(#"Columnas quitadas3",{{"Generado por", type text}, {"Fecha envío", type date}, {"Número envío", type text}, {"Código postal", type text}, {"Población", type text}, {"Provincia", type text}, {"Peso bulto", type number}, {"Franquicia destino", type text}, {"Orden bulto", Int64.Type}, {"Alto bulto", Int64.Type}, {"Ancho bulto", Int64.Type}, {"Largo bulto", Int64.Type}, {"Abonado", type text}, {"Estado", type text}, {"Tipo geográfico", type text}, {"Código servicio", type text}, {"Total", type number}, {"Nombre comercial open", type text}}),
+		    #"Filas ordenadas" = Table.Sort(#"Tipo cambiado1",{{"Abonado", Order.Ascending}})
+		in
+		    #"Filas ordenadas"
+	lineageTag: 4259aef3-386e-4070-852a-c6789c255117
+	queryGroup: 'Transformar archivo de CARPETA DATOS CLIENTES'
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+
+expression 'Archivo de ejemplo' =
+		let
+		    Origen = Folder.Files("C:\Users\Usuario\Downloads\CARPETA DATOS CLIENTES"),
+		    #"Otras columnas quitadas" = Table.SelectColumns(Origen,{"Content"}),
+		    Navegación1 = #"Otras columnas quitadas"{0}[Content]
+		in
+		    Navegación1
+	lineageTag: f0582dc4-b535-402a-a0c5-aa9ac71139ed
+	queryGroup: 'Transformar archivo de CARPETA DATOS CLIENTES\Consultas auxiliares'
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transformar archivo' =
+		let
+		    Origen = (Parámetro1 as binary) => let
+		    Origen = Excel.Workbook(Parámetro1, null, true),
+		    #"BUSQUEDA GENERAL DE ENVIO_Sheet" = Origen{[Item="BUSQUEDA GENERAL DE ENVIO",Kind="Sheet"]}[Data],
+		    #"Encabezados promovidos" = Table.PromoteHeaders(#"BUSQUEDA GENERAL DE ENVIO_Sheet", [PromoteAllScalars=true]),
+		    #"Columnas quitadas" = Table.RemoveColumns(#"Encabezados promovidos",{"Referencia cliente", "nombre remitente", "Nombre vía", "Número vía", "nombre destinatario", "Tipo vía de direcciones punto", "Nombre vía_1", "Número vía_2", "Total bultos", "Franquicia cliente", "Código servicio retorno", "Teléfono", "Teléfono_3", "Anomalía", "Importe Nominal", "Tipo cobro", "Nombre receptor entrega finalizada", "Número Cupón gratuito"}),
+		    #"Filas filtradas" = Table.SelectRows(#"Columnas quitadas", each ([Motivo] <> "Envío borrado")),
+		    #"Columnas quitadas1" = Table.RemoveColumns(#"Filas filtradas",{"Motivo", "Usuario", "Persona contacto", "Centro de coste", "Código Mensajero recogida finaliza", "Comentario anomalía", "Fecha de estado"}),
+		    #"Columna condicional agregada" = Table.AddColumn(#"Columnas quitadas1", "Nombre comercial open", each if [Abonado] = "000000" then "OPEN" else [Nombre Comercial]),
+		    #"Columnas quitadas2" = Table.RemoveColumns(#"Columna condicional agregada",{"Nombre Comercial"}),
+		    #"Filas filtradas1" = Table.SelectRows(#"Columnas quitadas2", each ([Estado] <> "Envío cancelado" and [Estado] <> "Recogida pendiente")),
+		    #"Dividir columna por delimitador" = Table.SplitColumn(#"Filas filtradas1", "Fecha entrega finalizada", Splitter.SplitTextByEachDelimiter({" "}, QuoteStyle.Csv, false), {"Fecha entrega finalizada.1", "Fecha entrega finalizada.2"}),
+		    #"Tipo cambiado" = Table.TransformColumnTypes(#"Dividir columna por delimitador",{{"Fecha entrega finalizada.1", type date}, {"Fecha entrega finalizada.2", type time}}),
+		    #"Columnas quitadas3" = Table.RemoveColumns(#"Tipo cambiado",{"Fecha entrega finalizada.2"}),
+		    #"Tipo cambiado1" = Table.TransformColumnTypes(#"Columnas quitadas3",{{"Generado por", type text}, {"Fecha envío", type date}, {"Número envío", type text}, {"Código postal", type text}, {"Población", type text}, {"Provincia", type text}, {"Peso bulto", type number}, {"Franquicia destino", type text}, {"Orden bulto", Int64.Type}, {"Alto bulto", Int64.Type}, {"Ancho bulto", Int64.Type}, {"Largo bulto", Int64.Type}, {"Abonado", type text}, {"Estado", type text}, {"Tipo geográfico", type text}, {"Código servicio", type text}, {"Total", type number}, {"Nombre comercial open", type text}}),
+		    #"Filas ordenadas" = Table.Sort(#"Tipo cambiado1",{{"Abonado", Order.Ascending}})
+		in
+		    #"Filas ordenadas"
+		in
+		    Origen
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transformar archivo de ejemplo""}" ]
+	lineageTag: d50dcf11-1a5a-45b7-8461-f490da05ca44
+	queryGroup: 'Transformar archivo de CARPETA DATOS CLIENTES\Consultas auxiliares'
+
+	annotation PBI_ResultType = Function
+
+expression AñoIni = "2022" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 70bd11cf-9df9-4f3e-9cce-6b5a3881f38a
+
+	annotation PBI_ResultType = Exception
+
+expression FechaIni =
+		let FechaIni = Date.FromText( "01/01/" & AñoIni )
+		in
+		    FechaIni
+	lineageTag: 8952e9b7-9f77-4ec6-a7a7-d3005f2cb451
+
+	annotation PBI_ResultType = Date
+
+expression AñoFin = "2025" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 0dc98c28-c185-4485-9eeb-14bb21833851
+
+	annotation PBI_ResultType = Exception
+
+	annotation PBI_NavigationStepName = Navegación
+
+expression FechaFin =
+		let FechaIni = Date.FromText( "31/12/" & AñoFin )
+		in
+		    FechaIni
+	lineageTag: 3ce07396-5e8e-456a-a168-527f5900e491
+
+	annotation PBI_ResultType = Date
+
+expression FechaEspecial =
+		let
+		    Origen = Excel.Workbook(File.Contents("D:\Users\Rafa\Documents\POWER PLATFORM\dimCALENDARIO\ElFuturoDeLosDatos-Fecha-Plantilla\FechaEspecial.xlsx"), null, true),
+		    Tabla1_Table = Origen{[Item="Tabla1",Kind="Table"]}[Data]
+		in
+		    Tabla1_Table
+	lineageTag: d44ac5b2-7d27-41a7-83db-e8ff1f1d568d
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+
+expression PROVINCIAS =
+		let
+		    Origen = Excel.Workbook(File.Contents("C:\Users\Usuario\Downloads\COMUNIDADES PROVINCIAS.xlsx"), null, true),
+		    PROVINCIAS_Sheet = Origen{[Item="PROVINCIAS",Kind="Sheet"]}[Data],
+		    #"Tipo cambiado" = Table.TransformColumnTypes(PROVINCIAS_Sheet,{{"Column1", type text}, {"Column2", type text}}),
+		    #"Encabezados promovidos" = Table.PromoteHeaders(#"Tipo cambiado", [PromoteAllScalars=true]),
+		    #"Tipo cambiado1" = Table.TransformColumnTypes(#"Encabezados promovidos",{{"Provincia", type text}, {"Comunidad", type text}}),
+		    #"Texto limpio" = Table.TransformColumns(#"Tipo cambiado1",{{"Provincia", Text.Clean, type text}}),
+		    #"Texto recortado" = Table.TransformColumns(#"Texto limpio",{{"Provincia", Text.Trim, type text}})
+		in
+		    #"Texto recortado"
+	lineageTag: a27ff6e4-c3de-4924-bebf-9733c50ab37c
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+
