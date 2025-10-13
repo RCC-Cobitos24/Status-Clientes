@@ -80,6 +80,17 @@
               },
               "queryRef": "1_MEDIDAS.Cantidad Facturacion por Peso Final",
               "nativeQueryRef": "Cantidad Facturacion por Peso Final"
+            },
+            {
+              "field": {
+                "NativeVisualCalculation": {
+                  "Language": "dax",
+                  "Expression": "[Cantidad Facturacion por Peso Final]/[Cantidad Envíos por Peso Final]",
+                  "Name": "CosteUnit"
+                }
+              },
+              "queryRef": "select",
+              "nativeQueryRef": "CosteUnit"
             }
           ]
         }

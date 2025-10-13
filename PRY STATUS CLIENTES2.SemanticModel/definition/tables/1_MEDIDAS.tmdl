@@ -1,7 +1,6 @@
 table 1_MEDIDAS
 	lineageTag: cf560f61-3b6e-46d4-8bbc-8f711024695a
 
-
 	measure 'Total envios' = DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío])
 		formatString: 0
 		displayFolder: Medidas Base
