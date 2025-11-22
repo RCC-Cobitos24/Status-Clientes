@@ -1,0 +1,9 @@
+table 'PeriodoDatos'
+	column Periodo
+		dataType: string
+	partition 'PeriodoDatos' = dax
+		source =
+			DATATABLE(
+				"Periodo", STRING,
+				{{"Actual"}, {"Histórico"}, {"Todos"}}
+			)

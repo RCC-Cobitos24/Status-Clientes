@@ -21,6 +21,7 @@ annotation PBI_QueryOrder = ["CARPETA DATOS CLIENTES","Parámetro1","Transformar
 annotation PBI_ProTooling = ["DaxQueryView_Desktop","DevMode","TMDL-Extension"]
 
 ref table 'CARPETA DATOS CLIENTES'
+ref table 'CARPETA DATOS CLIENTES HISTÓRICO'
 ref table Fecha
 ref table 1_MEDIDAS
 ref table dimAbonados

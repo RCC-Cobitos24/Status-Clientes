@@ -46,3 +46,27 @@ relationship a6c4da81-d9fd-6ef0-e610-ede3509f4374
 	fromColumn: TablaPesoConRango.'Tipo geográfico'
 	toColumn: TablaTipoGeografico.'Tipo Geografico'
 
+relationship historico_fecha_envio
+	fromColumn: 'CARPETA DATOS CLIENTES HISTÓRICO'.'Fecha envío'
+	toColumn: Fecha.Fecha
+
+relationship historico_abonado
+	fromColumn: 'CARPETA DATOS CLIENTES HISTÓRICO'.Abonado
+	toColumn: dimAbonados.Abonado
+
+relationship historico_nombre_comercial
+	fromColumn: 'CARPETA DATOS CLIENTES HISTÓRICO'.'Nombre comercial open'
+	toColumn: 'Estado Abonado'.'Nombre comercial open'
+
+relationship historico_codigo_servicio
+	fromColumn: 'CARPETA DATOS CLIENTES HISTÓRICO'.'Código servicio'
+	toColumn: DimServicios.'Código servicio'
+
+relationship historico_codigo_postal
+	fromColumn: 'CARPETA DATOS CLIENTES HISTÓRICO'.'Código postal'
+	toColumn: dimProvinciaFranquicia.'Código postal'
+
+relationship historico_tipo_geografico
+	fromColumn: 'CARPETA DATOS CLIENTES HISTÓRICO'.'Tipo geográfico'
+	toColumn: TablaTipoGeografico.'Tipo Geografico'
+
