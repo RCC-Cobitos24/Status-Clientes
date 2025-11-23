@@ -1,6 +1,7 @@
 table 'PeriodoDatos'
 	column Periodo
 		dataType: string
+		sourceColumn: Periodo
 	partition 'PeriodoDatos' = calculated
 		source =
 			DATATABLE(
