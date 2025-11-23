@@ -16,8 +16,6 @@ table 'CARPETA DATOS CLIENTES'
 		summarizeBy: none
 		sourceColumn: Fecha envío
 
-		changedProperty = DataType
-
 		annotation SummarizationSetBy = Automatic
 
 		annotation UnderlyingDateTimeDataType = Date

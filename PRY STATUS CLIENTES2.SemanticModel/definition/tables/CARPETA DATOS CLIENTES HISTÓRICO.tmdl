@@ -14,6 +14,8 @@ table 'CARPETA DATOS CLIENTES HISTÓRICO'
 		summarizeBy: none
 		sourceColumn: Fecha envío
 
+		annotation UnderlyingDateTimeDataType = Date
+
 	column 'Número envío'
 		dataType: string
 		lineageTag: 189e3677-982c-40f0-9f76-80d6fceec673
@@ -51,11 +53,12 @@ table 'CARPETA DATOS CLIENTES HISTÓRICO'
 		sourceColumn: Franquicia destino
 
 	column 'Fecha entrega finalizada.1'
-		dataType: dateTime
-		formatString: Long Date
+		dataType: string
 		lineageTag: 4e60a462-3830-4e73-a733-0164684533f2
 		summarizeBy: none
 		sourceColumn: Fecha entrega finalizada.1
+
+		annotation SummarizationSetBy = Automatic
 
 	column 'Orden bulto'
 		dataType: string
@@ -106,11 +109,12 @@ table 'CARPETA DATOS CLIENTES HISTÓRICO'
 		sourceColumn: Código servicio
 
 	column Total
-		dataType: double
-		formatString: 0.00
+		dataType: string
 		lineageTag: 0bce1391-2a1c-4c63-8898-5c8295b01406
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Total
+
+		annotation SummarizationSetBy = Automatic
 
 	column 'Nombre comercial open'
 		dataType: string
@@ -137,6 +141,9 @@ table 'CARPETA DATOS CLIENTES HISTÓRICO'
 				in
 					#"Filtrar históricos"
 
-	annotation PBI_ResultType = Table
+	annotation PBI_ResultType = Exception
+
 	annotation PBI_NavigationStepName = Navegación
+
 	annotation ExcludeFromModelRefresh = true
+

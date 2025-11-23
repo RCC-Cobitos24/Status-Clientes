@@ -1217,6 +1217,67 @@ table 1_MEDIDAS
 		displayFolder: Status Abonado
 		lineageTag: c8832987-6266-4a31-8056-f66357a5d72a
 
+	measure 'Importe Total (Histórico)' =
+			
+			SUMX(
+			    VALUES('CARPETA DATOS CLIENTES HISTÓRICO'[Número envío]),
+			    CALCULATE(MAX('CARPETA DATOS CLIENTES HISTÓRICO'[Total]))
+			)
+		formatString: 0
+		displayFolder: Medidas Base
+		lineageTag: aab2a52b-bf8d-4861-9f90-72ff2f4f29f2
+
+	measure 'Importe Total Dinámico' = ```
+			
+			VAR PeriodoSeleccionado =
+			    SELECTEDVALUE( PeriodoDatos[Periodo] ) // Obtiene la selección ('Actual', 'Histórico', 'Todos')
+			VAR AñoInicio = MAX('TablaParametros'[AñoIni])
+			VAR AñoFin = MAX('TablaParametros'[AñoFin])
+			
+			// Definimos los filtros de fechas (aunque las tablas M ya filtran, esto asegura la robustez en DAX)
+			VAR FiltroActual =
+			    FILTER(
+			        ALL('CARPETA DATOS CLIENTES'),
+			        YEAR('CARPETA DATOS CLIENTES'[Fecha envío]) >= AñoInicio &&
+			        YEAR('CARPETA DATOS CLIENTES'[Fecha envío]) <= AñoFin
+			    )
+			
+			VAR FiltroHistorico =
+			    FILTER(
+			        ALL('CARPETA DATOS CLIENTES HISTÓRICO'),
+			        YEAR('CARPETA DATOS CLIENTES HISTÓRICO'[Fecha envío]) < AñoInicio
+			    )
+			    
+			VAR Resultado = 
+			    SWITCH(
+			        TRUE(),
+			        
+			        // 1. Si se selecciona "Actual"
+			        PeriodoSeleccionado = "Actual", 
+			            CALCULATE(
+			                [Importe Total], 
+			                FiltroActual
+			            ),
+			            
+			        // 2. Si se selecciona "Histórico"
+			        PeriodoSeleccionado = "Histórico", 
+			            CALCULATE(
+			                [Importe Total (Histórico)], 
+			                FiltroHistorico
+			            ),
+			            
+			        // 3. Si se selecciona "Todos" o no hay selección
+			        TRUE(),
+			            // Suma de ambas medidas, asegurando que cada una usa su filtro de fecha correspondiente
+			            CALCULATE([Importe Total], FiltroActual) + 
+			            CALCULATE([Importe Total (Histórico)], FiltroHistorico)
+			    )
+			RETURN
+			    Resultado
+			```
+		displayFolder: Medidas Base
+		lineageTag: 6a8ba2a0-9a4b-4d3c-8bac-b0cdb39f3e4e
+
 	partition 1_MEDIDAS = m
 		mode: import
 		source =

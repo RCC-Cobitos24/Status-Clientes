@@ -1,10 +1,15 @@
-table 'PeriodoDatos'
+table PeriodoDatos
+	lineageTag: 5f3731db-13c7-456a-83b1-e0629779f0d8
+
 	column Periodo
-		dataType: string
-		sourceColumn: Periodo
-	partition 'PeriodoDatos' = calculated
+		lineageTag: 840e453b-258c-431b-bccd-eb9a4b769497
+		isNameInferred
+		sourceColumn: [Periodo]
+
+	partition PeriodoDatos = calculated
 		source =
-			DATATABLE(
-				"Periodo", STRING,
-				{{"Actual"}, {"Histórico"}, {"Todos"}}
-			)
+				DATATABLE(
+					"Periodo", STRING,
+					{{"Actual"}, {"Histórico"}, {"Todos"}}
+				)
+

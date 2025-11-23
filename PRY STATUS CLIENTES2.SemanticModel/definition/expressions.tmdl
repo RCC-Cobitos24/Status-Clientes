@@ -70,10 +70,12 @@ expression 'Transformar archivo' =
 
 	annotation PBI_ResultType = Function
 
-expression AñoIni = "2022" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+expression AñoIni = "2024" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
 	lineageTag: 70bd11cf-9df9-4f3e-9cce-6b5a3881f38a
 
-	annotation PBI_ResultType = Exception
+	annotation PBI_ResultType = Text
+
+	annotation PBI_NavigationStepName = Navegación
 
 expression FechaIni =
 		let FechaIni = Date.FromText( "01/01/" & AñoIni )
@@ -86,7 +88,7 @@ expression FechaIni =
 expression AñoFin = "2025" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
 	lineageTag: 0dc98c28-c185-4485-9eeb-14bb21833851
 
-	annotation PBI_ResultType = Exception
+	annotation PBI_ResultType = Text
 
 	annotation PBI_NavigationStepName = Navegación
 

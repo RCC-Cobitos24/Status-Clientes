@@ -16,12 +16,11 @@ queryGroup 'Transformar archivo de CARPETA DATOS CLIENTES\Consultas auxiliares'
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["CARPETA DATOS CLIENTES","Parámetro1","Transformar archivo de ejemplo","Archivo de ejemplo","Transformar archivo","AñoIni","FechaIni","AñoFin","FechaFin","Fecha","FechaEspecial","1_MEDIDAS","dimAbonados","dimClasificacionAbonados","dimProvinciaFranquicia","PROVINCIAS"]
+annotation PBI_QueryOrder = ["CARPETA DATOS CLIENTES","Parámetro1","Transformar archivo de ejemplo","Archivo de ejemplo","Transformar archivo","AñoIni","FechaIni","AñoFin","FechaFin","Fecha","FechaEspecial","1_MEDIDAS","dimAbonados","dimClasificacionAbonados","dimProvinciaFranquicia","PROVINCIAS","CARPETA DATOS CLIENTES HISTÓRICO","TablaParametros"]
 
 annotation PBI_ProTooling = ["DaxQueryView_Desktop","DevMode","TMDL-Extension"]
 
 ref table 'CARPETA DATOS CLIENTES'
-ref table 'CARPETA DATOS CLIENTES HISTÓRICO'
 ref table Fecha
 ref table 1_MEDIDAS
 ref table dimAbonados
@@ -35,6 +34,9 @@ ref table TablaRangosPeso
 ref table TablaPesoConRango
 ref table TablaTipoGeografico
 ref table 'Tabla Segmentador Indicador'
+ref table 'CARPETA DATOS CLIENTES HISTÓRICO'
+ref table PeriodoDatos
+ref table TablaParametros
 
 ref cultureInfo es-ES
 

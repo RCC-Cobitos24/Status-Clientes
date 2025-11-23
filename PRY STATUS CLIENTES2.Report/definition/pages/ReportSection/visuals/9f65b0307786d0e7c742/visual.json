@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.3.0/schema.json",
   "name": "9f65b0307786d0e7c742",
   "position": {
     "x": 0,
@@ -410,5 +410,149 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "452ffc98e5daec0650aa",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Fecha"
+              }
+            },
+            "Property": "Año"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "8ba6e6dede650a61900d",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Fecha"
+              }
+            },
+            "Property": "MesC"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "87db6ca68b357c02138e",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "1_MEDIDAS"
+              }
+            },
+            "Property": "Importe Total"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "8ba022af374c76db0538",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "1_MEDIDAS"
+              }
+            },
+            "Property": "Fac Año Anterior (a la fecha)"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "8f31969d8ad0c497d319",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "1_MEDIDAS"
+              }
+            },
+            "Property": "Diferencia Fac"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "8e2347085ca05e602599",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "1_MEDIDAS"
+              }
+            },
+            "Property": "Var FACT % AÑO ANT"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "188b9cfd210e057d9ac6",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "1_MEDIDAS"
+              }
+            },
+            "Property": "Total envios"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "5500d458d9a4600948d0",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "1_MEDIDAS"
+              }
+            },
+            "Property": "Cantidad Año Anterior (a la fecha)"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "aac9e85f8604426d2200",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "1_MEDIDAS"
+              }
+            },
+            "Property": "Diferencia Cant"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "d6cd2cbe41a39503b44a",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "1_MEDIDAS"
+              }
+            },
+            "Property": "Var CANT % AÑO ANT"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }
