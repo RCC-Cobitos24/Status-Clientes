@@ -1,7 +1,6 @@
 table 'CARPETA DATOS CLIENTES HISTÓRICO'
 	lineageTag: historico-96e2af11-9f8b-4652-a52b-235a8f86b959
 
-	// Columnas idénticas a la tabla principal
 	column 'Generado por'
 		dataType: string
 		lineageTag: c675de24-ca2e-4404-a5f9-c317e7bb178a
