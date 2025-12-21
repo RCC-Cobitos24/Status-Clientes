@@ -1,0 +1,305 @@
+table Fecha
+	lineageTag: 4fb0d3fc-df15-4fe2-9fcc-35c171cf7e16
+	dataCategory: Time
+
+	column Fecha
+		dataType: dateTime
+		isKey
+		formatString: Short Date
+		lineageTag: b2eada67-9b40-40af-8f74-c7c4f9294372
+		summarizeBy: none
+		sourceColumn: Fecha
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column FechaSK
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 95cfe83f-f022-4736-8839-eab0f1f33f8b
+		summarizeBy: none
+		sourceColumn: FechaSK
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column AñoNum
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0a113270-7a97-47d9-abcd-0fe0dd368e2b
+		summarizeBy: none
+		sourceColumn: AñoNum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column TrimestreNum
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0ac94bb8-473f-49dd-911e-3c397cd42041
+		summarizeBy: none
+		sourceColumn: TrimestreNum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column MesNum
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3efebf02-9db8-4e19-9cba-d1031cf7208c
+		summarizeBy: none
+		sourceColumn: MesNum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column AñoTrimNum
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 557bced1-ad43-4cd6-8fd5-9576023f17e8
+		summarizeBy: none
+		sourceColumn: AñoTrimNum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column AñoMesNum
+		dataType: int64
+		formatString: 0
+		lineageTag: 5c85c236-fe1a-45d1-ac8f-3129ef3cec17
+		summarizeBy: none
+		sourceColumn: AñoMesNum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column SemanaNum
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: af6502c8-7ca7-41aa-9a77-1d24b4c1906d
+		summarizeBy: none
+		sourceColumn: SemanaNum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column AñoSemanaNum
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 1c30a55b-83ee-4d83-ae44-69d604bb64b6
+		summarizeBy: none
+		sourceColumn: AñoSemanaNum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column DiaNum
+		dataType: int64
+		formatString: 0
+		lineageTag: 31d5f604-8fad-4ac1-b270-cb11363da225
+		summarizeBy: none
+		sourceColumn: DiaNum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column DiaSemanaNum
+		dataType: int64
+		formatString: 0
+		lineageTag: 50ecab3f-b2bd-41ed-94cb-2ae577971868
+		summarizeBy: none
+		sourceColumn: DiaSemanaNum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column Año
+		dataType: int64
+		formatString: 0
+		lineageTag: e263cfe5-944b-4aaf-86f9-7bc9f6da9cc5
+		summarizeBy: none
+		sourceColumn: Año
+
+		annotation SummarizationSetBy = User
+
+	column Trimestre
+		dataType: string
+		lineageTag: 0d18bbb5-c329-452d-85bb-e89d2e32935a
+		summarizeBy: none
+		sourceColumn: Trimestre
+
+		annotation SummarizationSetBy = Automatic
+
+	column TrimestreAño
+		dataType: string
+		lineageTag: ae82c0f6-d4c0-462e-914c-ae9b14edafc3
+		summarizeBy: none
+		sourceColumn: TrimestreAño
+		sortByColumn: AñoTrimNum
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column MesC
+		dataType: string
+		lineageTag: 4db04d8b-23cd-4532-904c-57f74d6d61d1
+		summarizeBy: none
+		sourceColumn: MesC
+		sortByColumn: MesNum
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column MesR
+		dataType: string
+		lineageTag: f52682c2-948a-4d91-923b-6064c14385c9
+		summarizeBy: none
+		sourceColumn: MesR
+		sortByColumn: MesNum
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column SemanaAño
+		dataType: string
+		lineageTag: 42ab3c97-3ffd-44d7-b8b7-f14a4fd9e269
+		summarizeBy: none
+		sourceColumn: SemanaAño
+		sortByColumn: AñoSemanaNum
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column DiaSemana
+		dataType: string
+		lineageTag: 6eb372d1-4601-4db5-9b77-c718cd1ed703
+		summarizeBy: none
+		sourceColumn: DiaSemana
+		sortByColumn: DiaSemanaNum
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column FechaEspecial
+		dataType: string
+		lineageTag: 48a8330e-49a2-48ad-a288-54dd1912d38e
+		summarizeBy: none
+		sourceColumn: FechaEspecial
+
+		annotation SummarizationSetBy = Automatic
+
+	column Laborable
+		dataType: string
+		lineageTag: 894215e7-c42a-403e-b98b-3f34cc9aea8b
+		summarizeBy: none
+		sourceColumn: Laborable
+
+		annotation SummarizationSetBy = Automatic
+
+	column FechaDiaSemana
+		dataType: string
+		lineageTag: 2259514f-b083-4cff-a89c-0da01058540e
+		summarizeBy: none
+		sourceColumn: FechaDiaSemana
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy A-M-D
+		lineageTag: 9d24f8db-9ec0-48ba-9176-a01e069fa21f
+
+		level Año
+			lineageTag: 1a87528a-0df5-415b-8526-3febb80351d3
+			column: Año
+
+		level MesR
+			lineageTag: cccfd05f-b0a4-4e53-b817-70d37abeac66
+			column: MesR
+
+		level Fecha
+			lineageTag: 570fb255-ed02-4766-afb2-dba4f97aa82a
+			column: Fecha
+
+	hierarchy A-S-D
+		lineageTag: 3bfd8805-81e4-47d9-814c-d33708228a9c
+
+		level Año
+			lineageTag: 9fcd05b0-fea2-493f-b2a8-d9441b77359f
+			column: Año
+
+		level SemanaAño
+			lineageTag: 1d3e6403-4307-4714-879e-d98c892babe9
+			column: SemanaAño
+
+		level Fecha
+			lineageTag: 243f78b1-fd1c-4d02-8bd0-99b774cae73b
+			column: Fecha
+
+	partition Fecha = m
+		mode: import
+		source =
+				let
+				    //Decidir si llamar a FechaFin o FechaFinDesvioAñoActual, según quieras que sea fija o dinámica con el año en curso
+				    Origen = List.Dates( FechaIni, Number.From( FechaFin ) - Number.From( FechaIni ),#duration(1,0,0,0)),
+				    //Origen = List.Dates( FechaIni, Number.From( FechaFinDesvioAñoActual ) - Number.From( FechaIni ),#duration(1,0,0,0)),
+				    #"Convertida en tabla" = Table.FromList(Origen, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+				    Fecha = Table.RenameColumns(#"Convertida en tabla",{{"Column1", "Fecha"}}),
+				    #"Tipo cambiado a Fecha" = Table.TransformColumnTypes(Fecha,{{"Fecha", type date}}),
+				    FechaSK = Table.AddColumn(#"Tipo cambiado a Fecha", "FechaSK", each Date.Year( [Fecha] ) * 10000 +
+				Date.Month( [Fecha] ) * 100 +
+				Date.Day( [Fecha] )),
+				    AñoNum = Table.AddColumn(FechaSK, "AñoNum", each Date.Year([Fecha]), Int64.Type),
+				    TrimestreNum = Table.AddColumn(AñoNum, "TrimestreNum", each Date.QuarterOfYear([Fecha]), Int64.Type),
+				    MesNum = Table.AddColumn(TrimestreNum, "MesNum", each Date.Month([Fecha]), Int64.Type),
+				    AñoTrimNum = Table.AddColumn(MesNum, "AñoTrimNum", each [AñoNum] * 100 + [TrimestreNum]),
+				    AñoMesNum = Table.AddColumn(AñoTrimNum, "AñoMesNum", each [AñoNum] * 100 + [MesNum]),
+				    SemanaNum = Table.AddColumn(AñoMesNum, "SemanaNum", each Date.WeekOfYear([Fecha]), Int64.Type),
+				    AñoSemanaNum = Table.AddColumn(SemanaNum, "AñoSemanaNum", each [AñoNum] * 100 + [SemanaNum]),
+				    DiaNum = Table.AddColumn(AñoSemanaNum, "DiaNum", each Date.Day([Fecha]), Int64.Type),
+				    DiaSemanaNum = Table.AddColumn(DiaNum, "DiaSemanaNum", each Date.DayOfWeek([Fecha]) + 1),
+				    Año = Table.AddColumn(DiaSemanaNum, "Año", each Date.Year([Fecha]), Int64.Type),
+				    #"Trimestre insertado" = Table.AddColumn(Año, "Trimestre", each "T" & Number.ToText( [TrimestreNum] )),
+				    TrimestreAño = Table.AddColumn(#"Trimestre insertado", "TrimestreAño", each [Trimestre] & "/" & Text.End(Text.From([Año], "es-ES"), 2)),
+				    MesC = Table.AddColumn(TrimestreAño, "MesC", each Text.Proper( Date.MonthName([Fecha]) ), type text),
+				    MesR = Table.AddColumn(MesC, "MesR", each Text.Proper( Text.Start([MesC], 3) ), type text),
+				    SemanaAño = Table.AddColumn(MesR, "SemanaAño", each "Sem " & Number.ToText( [SemanaNum] ) & " /" & Text.End(Text.From([Año], "es-ES"), 2)),
+				    DiaSemana = Table.AddColumn(SemanaAño, "DiaSemana", each Text.Proper( Date.DayOfWeekName([Fecha]) ), type text),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(DiaSemana,{{"FechaSK", Int64.Type}, {"AñoTrimNum", Int64.Type}, {"AñoMesNum", Int64.Type}, {"AñoSemanaNum", Int64.Type}, {"DiaSemanaNum", Int64.Type}, {"Trimestre", type text}, {"TrimestreAño", type text}, {"SemanaAño", type text}}),
+				    #"Consultas combinadas" = Table.NestedJoin(#"Tipo cambiado", {"Fecha"}, FechaEspecial, {"Fecha"}, "FechaEspecial", JoinKind.LeftOuter),
+				    #"Se expandió FechaEspecial" = Table.ExpandTableColumn(#"Consultas combinadas", "FechaEspecial", {"FechaEspecial"}, {"FechaEspecial.1"}),
+				    #"Tipo cambiado1" = Table.TransformColumnTypes(#"Se expandió FechaEspecial",{{"FechaEspecial.1", type text}}),
+				    #"Columnas con nombre cambiado" = Table.RenameColumns(#"Tipo cambiado1",{{"FechaEspecial.1", "FechaEspecial"}}),
+				    #"Columna condicional agregada1" = Table.AddColumn(#"Columnas con nombre cambiado", "Personalizado", each if [DiaSemana] = "Sábado" then "No laborable" else if [DiaSemana] = "Domingo" then "No laborable" else "Laborable", type text),
+				    #"Columnas con nombre cambiado1" = Table.RenameColumns(#"Columna condicional agregada1",{{"Personalizado", "Laborable"}}),
+				    #"Columna duplicada" = Table.DuplicateColumn(#"Columnas con nombre cambiado1", "Fecha", "Fecha - Copia"),
+				    #"Columna duplicada1" = Table.DuplicateColumn(#"Columna duplicada", "DiaSemana", "DiaSemana - Copia"),
+				    #"Columnas combinadas" = Table.CombineColumns(Table.TransformColumnTypes(#"Columna duplicada1", {{"Fecha - Copia", type text}}, "es-ES"),{"Fecha - Copia", "DiaSemana - Copia"},Combiner.CombineTextByDelimiter(" ", QuoteStyle.None),"FechaDiaSemana")
+				in
+				    #"Columnas combinadas"
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+

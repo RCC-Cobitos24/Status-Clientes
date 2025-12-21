@@ -1,0 +1,104 @@
+table 'dimUsuario Mensajero'
+	lineageTag: 74381622-724c-4f59-b76a-0564f35a4f56
+
+	column Usuario
+		dataType: string
+		lineageTag: 0bade5bc-9da7-413f-b978-3bd1e624ede5
+		summarizeBy: none
+		sourceColumn: Usuario
+
+		annotation SummarizationSetBy = Automatic
+
+	column Perfiles
+		dataType: string
+		lineageTag: 7a1cc73e-61b2-49d2-a783-2bf067165ea3
+		summarizeBy: none
+		sourceColumn: Perfiles
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tipo
+		dataType: string
+		lineageTag: bba4cdf8-cc3f-42fe-a655-99b69ba0d889
+		summarizeBy: none
+		sourceColumn: Tipo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Nombre
+		dataType: string
+		lineageTag: b10ed1e7-48f7-4c6f-b159-4fb303a3c88d
+		summarizeBy: none
+		sourceColumn: Nombre
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hora Entrada'
+		dataType: dateTime
+		formatString: hh:nn
+		lineageTag: 0d18a9c1-2b0f-4af9-b3c3-2b4772cfe9c8
+		summarizeBy: none
+		sourceColumn: Hora Entrada
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column 'Horas Contr'
+		dataType: int64
+		formatString: 0
+		lineageTag: 33f51865-0416-4671-8480-46c116225330
+		summarizeBy: sum
+		sourceColumn: Horas Contr
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Uso
+		dataType: string
+		lineageTag: 20f69ec4-eece-4002-9783-1a55e7b3f441
+		summarizeBy: none
+		sourceColumn: Uso
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ID Usuario'
+		dataType: string
+		lineageTag: 2486d2fa-4b7c-49d1-80e4-fd2098dc6314
+		summarizeBy: none
+		sourceColumn: ID Usuario
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'MInutos Contratados' = 'dimUsuario Mensajero'[Horas Contr]*60
+		formatString: 0
+		lineageTag: 90f7753c-6941-4cb1-b1ce-e43710e75fa3
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'dimUsuario Mensajero' = m
+		mode: import
+		source =
+				let
+				    Origen = Excel.Workbook(File.Contents("C:\Users\Usuario\Downloads\ESTADISTICAS\TABLA USUARIOS-MENSAJEROS\TABLA USUARIOS.xlsx"), null, true),
+				    Hoja1_Sheet = Origen{[Item="Hoja1",Kind="Sheet"]}[Data],
+				    #"Encabezados promovidos" = Table.PromoteHeaders(Hoja1_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Encabezados promovidos",{{"Usuario", type text}, {"Perfiles", type text}, {"Tipo", type text}, {"Horas Contr", type text}}),
+				    #"Hora extraída" = Table.TransformColumns(#"Tipo cambiado",{{"Hora Entrada", DateTime.Time, type time}}),
+				    #"Tipo cambiado1" = Table.TransformColumnTypes(#"Hora extraída",{{"Nombre", type text}, {"Uso", type text}}),
+				    #"Índice agregado" = Table.AddIndexColumn(#"Tipo cambiado1", "Índice", 1, 1, Int64.Type),
+				    #"Columnas con nombre cambiado" = Table.RenameColumns(#"Índice agregado",{{"Índice", "ID Usuario"}}),
+				    #"Columnas reordenadas" = Table.ReorderColumns(#"Columnas con nombre cambiado",{"ID Usuario", "Usuario", "Perfiles", "Tipo", "Nombre", "Hora Entrada", "Horas Contr", "Uso"}),
+				    #"Tipo cambiado2" = Table.TransformColumnTypes(#"Columnas reordenadas",{{"ID Usuario", type text}}),
+				    #"Texto recortado" = Table.TransformColumns(#"Tipo cambiado2",{{"Usuario", Text.Trim, type text}})
+				in
+				    #"Texto recortado"
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+

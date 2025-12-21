@@ -1,0 +1,11 @@
+DEFINE
+    MEASURE 'Medidas'[Final TM] = CALCULATE(
+    MAX(FacMensual_Control_Mensajeros[Hora-MInutos]),
+    FILTER(Hora,Hora[Turno]="Turno Mañana"),
+    ALLEXCEPT(Hora, Hora[IdHora])
+)
+
+EVALUATE
+    SUMMARIZECOLUMNS(
+        "Final TM", [Final TM]
+    )

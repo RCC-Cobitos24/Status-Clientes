@@ -1,0 +1,69 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "d9f7ed911bf78321af70",
+  "position": {
+    "x": 1044.0897755610972,
+    "y": 301.645885286783,
+    "z": 4000,
+    "height": 188.52867830423941,
+    "width": 228.92768079800499,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fecha"
+                    }
+                  },
+                  "Property": "AñoMesNum"
+                }
+              },
+              "queryRef": "Fecha.AñoMesNum",
+              "nativeQueryRef": "AñoMesNum"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
+                  "Property": "Media E/R MD"
+                }
+              },
+              "queryRef": "Medidas.Media E/R MD",
+              "nativeQueryRef": "Media E/R MD"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Fecha"
+                  }
+                },
+                "Property": "AñoMesNum"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

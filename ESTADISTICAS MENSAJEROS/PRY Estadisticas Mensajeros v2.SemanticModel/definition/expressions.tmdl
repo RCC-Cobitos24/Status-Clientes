@@ -1,0 +1,165 @@
+expression AñoIni = "2024" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 8b0d7747-f014-44eb-8422-ce17a7ad8546
+	queryGroup: ParametrosDimFecha
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Text
+
+expression AñoFin = "2025" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: c5ac3852-f98c-43f8-89b5-a9668f0009d4
+	queryGroup: ParametrosDimFecha
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Text
+
+expression AñosDesvioHoy = 1 meta [IsParameterQuery=true, Type="Number", IsParameterQueryRequired=true]
+	lineageTag: 827ea626-c076-48dc-9cd4-5397216377ee
+	queryGroup: ParametrosDimFecha
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Number
+
+expression FechaIni =
+		let FechaIni = Date.FromText( "01/01/" & AñoIni )
+		in
+		    FechaIni
+	lineageTag: c1f525ca-033b-4585-be7c-685a7d762f6d
+	queryGroup: ParametrosDimFecha
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Date
+
+expression FechaFin =
+		let FechaIni = Date.FromText( "31/12/" & AñoFin )
+		in
+		    FechaIni
+	lineageTag: 18263da7-bede-4678-bb8d-7b4a18f964f5
+	queryGroup: ParametrosDimFecha
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Date
+
+expression FechaFinDesvioAñoActual =
+		let FechaFin= Date.AddYears( Date.EndOfYear( Date.From( DateTime.LocalNow() as datetime ) ), AñosDesvioHoy )
+		in
+		    FechaFin
+	lineageTag: b7825a65-b56e-4771-a1b1-213f27b8655e
+	queryGroup: ParametrosDimFecha
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Date
+
+expression FechaEspecial =
+		let
+		    Origen = Excel.Workbook(File.Contents("D:\Users\Rafa\Documents\POWER PLATFORM\dimCALENDARIO\ElFuturoDeLosDatos-Fecha-Plantilla\FechaEspecial.xlsx"), null, true),
+		    Tabla1_Table = Origen{[Item="Tabla1",Kind="Table"]}[Data]
+		in
+		    Tabla1_Table
+	lineageTag: bf380a6d-fc1f-4e44-8ef5-99d445d286fc
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+
+expression Funcion =
+		(DIA)=>
+		let
+		    Origen = Folder.Files("C:\Users\Usuario\Downloads\ESTADISTICAS\DATOS"),
+		    #"Otras columnas quitadas" = Table.SelectColumns(Origen,{"Content"}),
+		    Content = #"Otras columnas quitadas"{DIA}[Content],
+		    #"Libro de Excel importado" = Excel.Workbook(Content),
+		    #"Otras columnas quitadas1" = Table.SelectColumns(#"Libro de Excel importado",{"Data"}),
+		    Data = #"Otras columnas quitadas1"{0}[Data],
+		    #"Encabezados promovidos" = Table.PromoteHeaders(Data, [PromoteAllScalars=true]),
+		    #"Columnas quitadas" = Table.RemoveColumns(#"Encabezados promovidos",{"Franquicia"}),
+		    #"Tipo cambiado" = Table.TransformColumnTypes(#"Columnas quitadas",{{"Fecha", type date}, {"Usuario", type text}, {"Estadística", type text}, {"Valor", type number}})
+		in
+		    #"Tipo cambiado"
+	lineageTag: b5612542-d3da-4e60-824a-2609496d022a
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Function
+
+expression 'Archivo de ejemplo (2)' =
+		let
+		    Origen = Folder.Files("C:\Users\Usuario\Downloads\ESTADISTICAS\DATOS CONTROL MENSAJEROS"),
+		    Navegación1 = Origen{0}[Content]
+		in
+		    Navegación1
+	lineageTag: 6ba6c2c2-cdc4-4577-b938-5c50a9d31ae2
+	queryGroup: 'Transformar archivo de DATOS CONTROL MENSAJEROS (2)\Consultas auxiliares'
+
+	annotation PBI_ResultType = Binary
+
+expression Parámetro2 = #"Archivo de ejemplo (2)" meta [IsParameterQuery=true, BinaryIdentifier=#"Archivo de ejemplo (2)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: bea59ace-07ff-4a5d-82c4-c41cf2dc4775
+	queryGroup: 'Transformar archivo de DATOS CONTROL MENSAJEROS (2)\Consultas auxiliares'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transformar archivo (2)' =
+		let
+		    Origen = (Parámetro2 as binary) => let
+		    Origen = Csv.Document(Parámetro2,[Delimiter=";", Columns=25, Encoding=65001, QuoteStyle=QuoteStyle.None])
+		in
+		    Origen
+		in
+		    Origen
+	lineageTag: 9694b895-3b29-48b4-88a6-e17ec001cb88
+	queryGroup: 'Transformar archivo de DATOS CONTROL MENSAJEROS (2)\Consultas auxiliares'
+
+	annotation PBI_ResultType = Function
+
+	annotation PBI_NavigationStepName = Navegación
+
+expression Parámetro3 = #"Archivo de ejemplo (3)" meta [IsParameterQuery=true, BinaryIdentifier=#"Archivo de ejemplo (3)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 2573f705-3cc8-4f32-8137-650ccb540991
+	queryGroup: 'Transformar archivo de Mensual_Control_Mensajeros\Consultas auxiliares'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transformar archivo de ejemplo (3)' =
+		let
+		    Origen = Excel.Workbook(Parámetro3, null, true),
+		    #"Listado Control de Mensajeros_Sheet" = Origen{[Item="Listado Control de Mensajeros",Kind="Sheet"]}[Data]
+		in
+		    #"Listado Control de Mensajeros_Sheet"
+	lineageTag: c9ac210b-a88f-4512-925b-d4b6723fbb7d
+	queryGroup: 'Transformar archivo de Mensual_Control_Mensajeros'
+
+expression 'Archivo de ejemplo (3)' =
+		let
+		    Origen = Folder.Files("C:\Users\Usuario\Downloads\ESTADISTICAS\DATOS CONTROL MENSAJEROS"),
+		    #"Invocar función personalizada1" = Table.AddColumn(Origen, "Transformar archivo (2)", each #"Transformar archivo (2)"([Content])),
+		    Navegación1 = #"Invocar función personalizada1"{0}[Content]
+		in
+		    Navegación1
+	lineageTag: e285ecd4-8de9-4f09-affc-e66ea3895bb4
+	queryGroup: 'Transformar archivo de Mensual_Control_Mensajeros\Consultas auxiliares'
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transformar archivo (3)' =
+		let
+		    Origen = (Parámetro3 as binary) => let
+		    Origen = Excel.Workbook(Parámetro3, null, true),
+		    #"Listado Control de Mensajeros_Sheet" = Origen{[Item="Listado Control de Mensajeros",Kind="Sheet"]}[Data]
+		in
+		    #"Listado Control de Mensajeros_Sheet"
+		in
+		    Origen
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transformar archivo de ejemplo (3)""}" ]
+	lineageTag: a4d7c285-a769-4d58-8161-753bbf3e6753
+	queryGroup: 'Transformar archivo de Mensual_Control_Mensajeros\Consultas auxiliares'
+
+	annotation PBI_ResultType = Function
+

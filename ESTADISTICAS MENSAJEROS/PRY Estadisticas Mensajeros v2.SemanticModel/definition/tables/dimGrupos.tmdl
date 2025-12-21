@@ -1,0 +1,33 @@
+table dimGrupos
+	lineageTag: 80d2fa82-be13-4f1c-97da-bec97f13ba01
+
+	column ID
+		dataType: string
+		lineageTag: 31c794e2-e368-401c-b810-8bccbb484622
+		summarizeBy: none
+		sourceColumn: ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Grupo
+		dataType: string
+		lineageTag: 698ac18c-f928-4747-ace8-ee4c718c44e7
+		summarizeBy: none
+		sourceColumn: Grupo
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimGrupos = m
+		mode: import
+		source =
+				let
+				    Origen = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45W8nRR0lFyLyotyFeK1YlWMgTyXPNKilLTE8F8IyA/KDU5Pz0zJbFYKTYWAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Columna1 = _t, Columna2 = _t]),
+				    #"Encabezados promovidos" = Table.PromoteHeaders(Origen, [PromoteAllScalars=true]),
+				    #"Valor reemplazado" = Table.ReplaceValue(#"Encabezados promovidos","Recogidas","Recogida",Replacer.ReplaceText,{"Grupo"})
+				in
+				    #"Valor reemplazado"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navegación
+

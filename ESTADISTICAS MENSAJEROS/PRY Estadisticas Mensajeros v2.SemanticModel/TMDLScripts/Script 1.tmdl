@@ -1,0 +1,10 @@
+createOrReplace
+
+	expression AñoFin = "2025" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+		lineageTag: c5ac3852-f98c-43f8-89b5-a9668f0009d4
+		queryGroup: ParametrosDimFecha
+
+		annotation PBI_NavigationStepName = Navegación
+
+		annotation PBI_ResultType = Text
+

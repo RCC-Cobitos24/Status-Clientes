@@ -1,0 +1,33 @@
+table dimTipos
+	lineageTag: 704db653-623b-4f93-9746-e1a22e3c7973
+
+	column 'ID Tipo'
+		dataType: string
+		lineageTag: 8b66e2d0-467c-4793-a8d0-b0b1b623663a
+		summarizeBy: none
+		sourceColumn: ID Tipo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tipo
+		dataType: string
+		lineageTag: 7b694a0c-6828-444a-99ea-008c3e80810a
+		summarizeBy: none
+		sourceColumn: Tipo
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimTipos = m
+		mode: import
+		source =
+				let
+				    Origen = Excel.Workbook(File.Contents("C:\Users\Usuario\Downloads\ESTADISTICAS\TABLA USUARIOS-MENSAJEROS\TABLA ESTADISTICAS.xlsx"), null, true),
+				    TIPOS_Sheet = Origen{[Item="TIPOS",Kind="Sheet"]}[Data],
+				    #"Encabezados promovidos" = Table.PromoteHeaders(TIPOS_Sheet, [PromoteAllScalars=true])
+				in
+				    #"Encabezados promovidos"
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+

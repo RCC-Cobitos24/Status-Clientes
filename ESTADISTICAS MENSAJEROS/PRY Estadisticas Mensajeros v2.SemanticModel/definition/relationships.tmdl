@@ -1,0 +1,36 @@
+relationship AutoDetected_553bc3cc-b139-431c-98e0-f1b5d355897d
+	fromColumn: FacDatos1.Estadística
+	toColumn: dimEstadisticas.Estadística
+
+relationship 7a9f7e37-7de5-cf3b-d7f1-0c3e9fc28ae8
+	fromColumn: FacMensual_Control_Mensajeros.Hora-MInutos
+	toColumn: Hora.IdHora
+
+relationship e6a66dac-c5d6-c094-927a-1fd7c030b29a
+	fromColumn: dimEstadisticas.Tipo
+	toColumn: dimTipos.Tipo
+
+relationship f83988ed-8d3d-0cf4-fc4a-24ff79dac5b0
+	fromColumn: FacDatos1.Fecha
+	toColumn: Fecha.Fecha
+
+relationship 19e4415d-64a0-21f7-a435-ca42eec59417
+	fromColumn: FacMensual_Control_Mensajeros.Fecha
+	toColumn: Fecha.Fecha
+
+relationship 965898e4-a5e3-4e6a-e4b7-f1b3fb5bb396
+	fromColumn: FacDatos1.Usuario
+	toColumn: 'dimUsuario Mensajero'.Usuario
+
+relationship c9bbb90e-b5c8-8bff-78cd-b11d4b1a4e03
+	fromColumn: FacMensual_Control_Mensajeros.Código
+	toColumn: 'dimUsuario Mensajero'.Usuario
+
+relationship AutoDetected_52cdeb2e-342c-4d07-b45b-9391fe1248bc
+	fromColumn: FacMensual_Control_Mensajeros.Grupo
+	toColumn: dimGrupos.Grupo
+
+relationship a2a27be1-7474-8a02-0732-4bb64f259231
+	fromColumn: FacMensual_Control_Mensajeros.Horas
+	toColumn: TablaRangosHoras.ClaveHora
+

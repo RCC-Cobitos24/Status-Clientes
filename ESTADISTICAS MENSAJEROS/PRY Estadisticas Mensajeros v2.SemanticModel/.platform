@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "PRY Estadisticas Mensajeros v2"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "d9f3264c-3c82-4217-b213-4a136d0f00f3"
+  }
+}

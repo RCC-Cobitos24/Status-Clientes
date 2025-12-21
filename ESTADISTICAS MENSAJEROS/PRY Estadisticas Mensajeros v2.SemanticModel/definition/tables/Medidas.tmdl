@@ -1,0 +1,873 @@
+table Medidas
+	lineageTag: a77cc0b6-2001-41f6-bf43-5103132c9923
+
+	measure Media = AVERAGE(FacDatos1[Valor])
+		displayFolder: Estadistica Mensajero
+		lineageTag: da2f6ead-9860-4d15-939e-12341dfbe446
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Max Valor' = MAX(FacDatos1[Valor])
+		displayFolder: Estadistica Mensajero
+		lineageTag: f8eeb49f-0d80-446a-a7ab-6e3fb3c4e6ff
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Totales = DISTINCTCOUNT(FacMensual_Control_Mensajeros[N. Envío])
+		formatString: 0
+		displayFolder: Control Mensasjero
+		lineageTag: 0232eda9-a076-4682-b354-b4bfbeeed766
+
+	measure 'Total Entregas' = ```
+			
+			    CALCULATE(
+			        [Totales],
+			        FacMensual_Control_Mensajeros[Grupo]= "Entrega"
+			    )
+			```
+		formatString: 0
+		displayFolder: Control Mensasjero
+		lineageTag: c954248e-e909-470a-a37f-db64305cf2a2
+
+	measure 'Total Recogidas' = ```
+			
+			    CALCULATE(
+			        [Totales],
+			        FacMensual_Control_Mensajeros[Grupo]= "Recogida"
+			    )
+			```
+		formatString: 0
+		displayFolder: Control Mensasjero
+		lineageTag: f125eb3c-53fa-41b4-b383-7f5ba614a581
+
+	measure 'Inicial TM' =
+			
+			CALCULATE(
+			    MIN(FacMensual_Control_Mensajeros[Hora-MInutos]),
+			    FILTER(Hora,Hora[Turno]="Turno Mañana"),
+			    ALLEXCEPT(Hora, Hora[IdHora])
+			)
+		formatString: h:nn
+		displayFolder: Control Mensasjero
+		lineageTag: fcdc238c-5505-4305-9657-e14fb2544f19
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	measure 'Final TM' =
+			
+			CALCULATE(
+			    MAX(FacMensual_Control_Mensajeros[Hora-MInutos]),
+			    FILTER(Hora,Hora[Turno]="Turno Mañana"),
+			    ALLEXCEPT(Hora, Hora[IdHora])
+			)
+		formatString: Short Time
+		displayFolder: Control Mensasjero
+		lineageTag: de3418b2-4c7c-4055-bc0d-b6a010caa99e
+
+	measure 'Inicial TT' =
+			
+			CALCULATE(
+			    MIN(FacMensual_Control_Mensajeros[Hora-MInutos]),
+			    FILTER(Hora,Hora[Turno]="Turno Tarde"),
+			    ALLEXCEPT(Hora, Hora[IdHora])
+			)
+		formatString: Short Time
+		displayFolder: Control Mensasjero
+		lineageTag: cb1b2080-8563-4157-8d2d-f8f582b39763
+
+	measure 'Final TT' =
+			
+			CALCULATE(
+			    MAX(FacMensual_Control_Mensajeros[Hora-MInutos]),
+			    FILTER(Hora,Hora[Turno]="Turno Tarde"),
+			    ALLEXCEPT(Hora, Hora[IdHora])
+			)
+		formatString: Short Time
+		displayFolder: Control Mensasjero
+		lineageTag: bd8d8c2e-d8bc-4d9b-834b-903ed977b988
+
+	measure 'H EF E/R' =
+			
+			VAR TM= [Inicial TM]-[Final TM]
+			VAR TT= [Inicial TT]-[Final TT]
+			RETURN
+			    TM+TT
+		formatString: h:nn
+		displayFolder: Control Mensasjero
+		lineageTag: 21eb638b-a631-4d65-8fd9-9f2d8c946c3f
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	measure 'Total Mes Anterior' =
+			
+			CALCULATE(
+			    [Total],
+			    DATEADD(Fecha[Fecha], -1, MONTH)
+			)
+		displayFolder: Estadistica Mensajero
+		lineageTag: 7c0ddc2e-2896-4d3e-b484-b09236a1c046
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Recuento Personal' = DISTINCTCOUNT(FacDatos1[Usuario])
+		formatString: 0
+		displayFolder: Control Mensasjero
+		lineageTag: ab9ce039-8f2f-4a29-b49e-46460b00c761
+
+	measure 'Media Personal Mes' = AVERAGE(FacDatos1[Usuario])
+		displayFolder: Control Mensasjero
+		lineageTag: 0e65fbe0-2978-4aea-b520-921b6d630db7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'MEDIA Efectivas E/R' =
+			
+			VAR TM= [Inicial TM]-[Final TM]
+			VAR TT= [Inicial TT]-[Final TT]
+			VAR HorasEfectivas= TM+TT
+			RETURN
+			    DIVIDE(HorasEfectivas,[DiasTrabajados])
+		displayFolder: Control Mensasjero
+		lineageTag: 76c24b8a-cc34-436c-9bfe-5075cc974b30
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure DiasTrabajados =
+			
+			CALCULATE(
+			    DISTINCTCOUNT(FacDatos1[Fecha]),
+			    FILTER(
+			        FacDatos1,
+			        FacDatos1[Usuario] = SELECTEDVALUE('FacDatos1'[Usuario])
+			    )
+			)
+		formatString: 0
+		displayFolder: Control Mensasjero
+		lineageTag: c6a97cfe-15cf-4d1d-ac6d-1857c468ff83
+
+	measure MediaMesAnterior =
+			
+			CALCULATE(
+			    [Media],
+			    DATEADD(Fecha[Fecha], -1, MONTH)
+			)
+		displayFolder: Estadistica Mensajero
+		lineageTag: 2c17d73f-ef05-410b-ad52-f9abebc96b90
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Total = sum(FacDatos1[Valor])
+		displayFolder: Estadistica Mensajero
+		lineageTag: c886415b-8d02-4499-9e25-7ad6b8b4c38a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Dif Medias' = [Media]-[MediaMesAnterior]
+		displayFolder: Estadistica Mensajero
+		lineageTag: 527dcd32-2d79-4110-b70a-7c7990cd1a00
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'E/R MD' = ```
+			
+			    CALCULATE(
+			        [Total],
+			        FacDatos1[Estadística] = " Recogidas y entregas finalizadas misma dirección"
+			    )
+			```
+		formatString: 0
+		displayFolder: Estadistica Mensajero
+		lineageTag: db5373ef-4c50-4b89-ba68-cf6e44c91c25
+
+	measure 'Media E/R MD' = ```
+			
+			    AVERAGEX(
+			        FILTER(
+			            FacDatos1,
+			            FacDatos1[Estadística] = " Recogidas y entregas finalizadas misma dirección"
+			        ),
+			        [Total]
+			    )
+			```
+		displayFolder: Estadistica Mensajero
+		lineageTag: 3af1917a-f9bf-4694-a73a-2182ef573ddb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Media E/R MD anterior' = ```
+			
+			    CALCULATE(
+			        [Media E/R MD],
+			        DATEADD(Fecha[Fecha], -1, MONTH)
+			    )
+			```
+		displayFolder: Estadistica Mensajero
+		lineageTag: 63376b9b-eff5-4cf0-88b2-3c54b987eeeb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% EF' = ```
+			
+			    VAR Horas = HOUR([H EF E/R])
+			    VAR Minutos = MINUTE([H EF E/R])
+			    VAR MinutosC = SELECTEDVALUE('dimUsuario Mensajero'[MInutos Contratados])
+			    RETURN (Horas * 60 + Minutos)/MinutosC
+			```
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Control Mensasjero
+		lineageTag: ae2cfe88-6df7-4502-a22a-ff8c9d67cb01
+
+	measure 'MEDIA % EF' = ```
+			
+			    VAR Horas = HOUR([H EF E/R])
+			    VAR Minutos = MINUTE([H EF E/R])
+			    VAR MinutosC = SELECTEDVALUE('dimUsuario Mensajero'[MInutos Contratados])
+			    VAR _EF= (Horas * 60 + Minutos)/MinutosC
+			    RETURN DIVIDE(_EF, [DiasTrabajados])
+			```
+		displayFolder: Control Mensasjero
+		lineageTag: 64aeee2a-32fe-4006-8924-fa1cbfba183a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'MaxValor MesAnterior' =
+			
+			CALCULATE(
+			    [Max Valor],
+			    DATEADD(Fecha[Fecha], -1, MONTH)
+			)
+		displayFolder: Estadistica Mensajero
+		lineageTag: fd9563ed-affa-4ce5-b888-8247778a93f5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TituloMesActualVsMesPrevio = ```
+			
+			    VAR _ultf = LASTNONBLANK(Fecha[Fecha], [Media]) 
+			    VAR _mesAct = FORMAT(_ultf, "MMMM yyyy") 
+			    VAR _mesPrev = FORMAT(DATE(YEAR(_ultf), MONTH(_ultf) - 1, 1), "MMMM yyyy") 
+			    RETURN 
+			        _mesAct & " - VS - " & _mesPrev
+			
+			```
+		displayFolder: Estadistica Mensajero
+		lineageTag: 477bd459-8d5d-401d-bd7a-1284ff9a90c7
+
+	measure DIAS>85 =
+			
+			IF([% EF] > 0.85,
+			COUNTROWS(Fecha
+			)
+			)
+		formatString: 0
+		displayFolder: Control Mensasjero
+		lineageTag: 7c8b5d3a-f364-4956-999f-459504277222
+
+	measure 'DIA >85 PorMes' = ```
+			
+			SUMX(
+			    SUMMARIZE(
+			        FacDatos1,
+			        FacDatos1[Fecha],
+			        "Conteo", IF([% EF] > 0.85, 1, 0)
+			    ),
+			    [Conteo]
+			)
+			
+			```
+		formatString: 0
+		displayFolder: Control Mensasjero
+		lineageTag: 374c0d65-00f3-4320-bc55-ea7f140f7f22
+
+	measure 'Total Recogidos Plataforma' = ```
+			
+			    CALCULATE(
+			        [Total],
+			        FacDatos1[Estadística] = " Entregas controladas al salir de plataforma a FQ destino"
+			    )
+			```
+		displayFolder: Estadistica Mensajero
+		lineageTag: ff9a3843-6f15-4931-891c-90e224709b36
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalRecogidosPlataformaMesAnterior = ```
+			
+			    CALCULATE( [Total], 
+			    FacDatos1[Estadística] = " Entregas controladas al salir de plataforma a FQ destino", 
+			    DATEADD(Fecha[Fecha], -1, MONTH)
+			)
+			```
+		displayFolder: Estadistica Mensajero
+		lineageTag: 33bafa99-a10b-44a3-802e-8a1dc37c0e69
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'nº dias Trabajados' = ```
+			
+			    CALCULATE(
+			        COUNTROWS(
+			            VALUES(FacDatos1[Fecha])
+			        ))
+			```
+		formatString: 0
+		displayFolder: Control Mensasjero
+		lineageTag: 7459a613-5f7f-4679-b882-d618bc86df1b
+
+	measure 'Total Tiempo' =
+			
+			VAR Total_Segundos= SUM(FacMensual_Control_Mensajeros[DURACION DAX])
+			VAR Horas = INT(Total_Segundos/60)
+			VAR Minutos = INT(MOD(Total_Segundos,3600)/60)
+			RETURN
+			FORMAT(Horas,"00") & FORMAT(Minutos, "00")
+		displayFolder: Control Mensasjero
+		lineageTag: ac617a96-c405-43b2-b5c6-1e230cd2a42d
+
+	measure 'DURACION DAX' =
+			
+			VAR H= HOUR()
+		displayFolder: Control Mensasjero
+		lineageTag: efc3c316-fd03-42f2-a326-4e7410560c8e
+
+	measure 'Total Entregas TM' = ```
+			
+			    CALCULATE(
+			        [Totales],
+			        FacMensual_Control_Mensajeros[Grupo]= "Entrega",
+			        FILTER(hora,Hora[Turno]="Turno Mañana")
+			    )
+			```
+		formatString: 0
+		displayFolder: Control Mensasjero
+		lineageTag: 4c4c7799-802d-469e-8270-982621f91d60
+
+	measure 'Total Entregas TT' = ```
+			
+			    CALCULATE(
+			        [Totales],
+			        FacMensual_Control_Mensajeros[Grupo]= "Entrega",
+			        FILTER(hora,Hora[Turno]="Turno Tarde")
+			    )
+			```
+		formatString: 0
+		displayFolder: Control Mensasjero
+		lineageTag: 6c043809-4bae-4bad-883d-1b82b460fde6
+
+	measure 'Total E/R TT' =
+			
+			VAR Entregas=
+			    CALCULATE(
+			        [Totales],
+			        FacMensual_Control_Mensajeros[Grupo]= "Entrega",
+			        FILTER(hora,Hora[Turno]="Turno Tarde")
+			    )
+			VAR Recogidas=
+			     CALCULATE(
+			        [Totales],
+			        FacMensual_Control_Mensajeros[Grupo]= "Recogida",
+			        FILTER(hora,Hora[Turno]="Turno Tarde")
+			    )
+			RETURN Entregas+Recogidas
+		formatString: 0
+		displayFolder: Control Mensasjero
+		lineageTag: 0192fd4c-465a-4c21-ab33-3c89fa18aa2d
+
+	measure 'Total E/R TM' =
+			
+			VAR Entregas=
+			    CALCULATE(
+			        [Totales],
+			        FacMensual_Control_Mensajeros[Grupo]= "Entrega",
+			        FILTER(hora,Hora[Turno]="Turno Mañana")
+			    )
+			VAR Recogidas=
+			     CALCULATE(
+			        [Totales],
+			        FacMensual_Control_Mensajeros[Grupo]= "Recogida",
+			        FILTER(hora,Hora[Turno]="Turno Mañana")
+			    )
+			RETURN Entregas+Recogidas
+		formatString: 0
+		displayFolder: Control Mensasjero
+		lineageTag: 522e9b94-0c8c-4821-b097-24bd1acc5b8b
+
+	measure 'Preparacion Mañanas' = ```
+			
+			VAR HoraEntrada = TIMEVALUE(SELECTEDVALUE('dimUsuario Mensajero'[Hora Entrada]))
+			VAR HoraInicial = TIMEVALUE([Inicial TM])
+			VAR Diferencia = HoraInicial - HoraEntrada
+			RETURN
+			IF(Diferencia > 0, Diferencia, BLANK())
+			
+			```
+		formatString: h:nn
+		displayFolder: Control Mensasjero
+		lineageTag: 126f2ce9-7315-4c33-aac6-6ab81973cf8a
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	measure 'Media Tiempo Trabajado' = ```
+			
+			AVERAGEX(
+			    FILTER(
+			        FacMensual_Control_Mensajeros,
+			        NOT(ISBLANK([H EF E/R]))
+			    ),
+			    [H EF E/R]
+			)
+			
+			```
+		displayFolder: Control Mensasjero
+		lineageTag: ea8c31af-627b-4508-989d-c8687619ecff
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Tiempo Efectivo' =
+			
+			VAR Preparacion = TIMEVALUE([Preparacion Mañanas])
+			VAR HorasEF= TIMEVALUE([H EF E/R])
+			VAR totales = Preparacion + HorasEF
+			RETURN
+			IF(totales > 0, totales, BLANK())
+		formatString: h:nn
+		displayFolder: Control Mensasjero
+		lineageTag: 80515a49-2314-448a-ae7d-d34c666f833a
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	measure 'Preparacion Tardes' =
+			
+			VAR HoraEntrada = TIMEVALUE("16:30")
+			VAR HoraInicial = TIMEVALUE([Inicial TT])
+			VAR Diferencia = HoraInicial - HoraEntrada
+			RETURN
+			IF(Diferencia > 0, Diferencia, BLANK())
+		formatString: h:nn
+		displayFolder: Control Mensasjero
+		lineageTag: fbe5ba17-2596-4772-b2f5-74fd0fda4f01
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	measure MediaMensualPreparacion =
+			
+			CALCULATE(
+			    AVERAGEX(
+			        VALUES(Fecha[Fecha]),
+			        VAR HoraEntrada = TIMEVALUE(SELECTEDVALUE('dimUsuario Mensajero'[Hora Entrada]))
+			        VAR HoraInicial = TIMEVALUE([Inicial TM])
+			        VAR Diferencia = HoraInicial - HoraEntrada
+			        RETURN IF(Diferencia > 0, Diferencia, BLANK())
+			    ),
+			    DATESMTD(Fecha[Fecha]
+			)
+			)
+		displayFolder: Control Mensasjero
+		lineageTag: c4f3b1c3-477d-4409-97e9-97dc19c11f02
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure H_EF_ER_Decimal = ```
+			
+			VAR Hora = LEFT([H EF E/R], 2) * 1
+			VAR Minutos = RIGHT([H EF E/R], 2) * 1 / 60
+			RETURN Hora + Minutos
+			
+			```
+		formatString: 0.00
+		displayFolder: Control Mensasjero
+		lineageTag: 7c629f09-bd68-40c2-b48b-97f1c901da74
+
+	measure Media_H_EF_ER_HHMM = ```
+			
+			VAR H_EF_ER_Decimal = 
+			    AVERAGEX(
+			        VALUES(FacMensual_Control_Mensajeros[Fecha]), 
+			        ABS([H EF E/R]) * 24  -- Convertir a horas decimales y forzar positivo
+			    )
+			
+			VAR Horas = INT(H_EF_ER_Decimal)  -- Parte entera (horas)
+			VAR Minutos = ROUND((H_EF_ER_Decimal - Horas) * 60, 0)  -- Minutos
+			
+			RETURN FORMAT(Horas, "00") & ":" & FORMAT(Minutos, "00")
+			
+			```
+		displayFolder: Control Mensasjero
+		lineageTag: 2f190624-05e4-4a80-a8ce-a1892cb31907
+
+	measure EntregasFinalizadas = ```
+			
+			CALCULATE(
+			    [Total], 
+			    FILTER(
+			        FacDatos1, 
+			        FacDatos1[Estadística] = " Entregas finalizadas"
+			    )
+			)
+			```
+		displayFolder: Estadistica Mensajero
+		lineageTag: 1a1a5880-b764-4e95-b5d2-a2e231c0c791
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Media EntregasFinalizadas' = ```
+			
+			AVERAGEX(
+			    FILTER(
+			        FacDatos1, 
+			        FacDatos1[Estadística] = " Entregas finalizadas"
+			    ),
+			    CALCULATE([Total]
+			))
+			```
+		displayFolder: Estadistica Mensajero
+		lineageTag: 4d8aba7c-216e-4d4f-982e-09d4009fd481
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure P25_Mensj =
+			
+			PERCENTILEX.INC (
+			    FILTER ( FacDatos1, FacDatos1[Usuario] = SELECTEDVALUE(FacDatos1[Usuario]) ),
+			    FacDatos1[Valor],
+			    0.25
+			)
+		displayFolder: Percentiles y boxplot
+		lineageTag: ae56cd9b-e73f-4728-bf82-5f959d991692
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure P50_Mensj =
+			
+			PERCENTILEX.INC (
+			    FILTER ( FacDatos1, FacDatos1[Usuario] = SELECTEDVALUE(FacDatos1[Usuario]) ),
+			    FacDatos1[Valor],
+			    0.50
+			)
+		displayFolder: Percentiles y boxplot
+		lineageTag: b34949df-c001-4982-9a76-2124d4f6b3f6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure P75_Mensj =
+			
+			PERCENTILEX.INC (
+			    FILTER ( FacDatos1, FacDatos1[Usuario] = SELECTEDVALUE(FacDatos1[Usuario]) ),
+			    FacDatos1[Valor],
+			    0.75
+			)
+		displayFolder: Percentiles y boxplot
+		lineageTag: f96eca76-39b2-4b52-941a-c21c36b94c2b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Min_Mensj =
+			
+			MINX (
+			    FILTER ( FacDatos1, FacDatos1[Usuario] = SELECTEDVALUE(FacDatos1[Usuario]) ),
+			    FacDatos1[Valor]
+			)
+		displayFolder: Percentiles y boxplot
+		lineageTag: edda97c6-e80b-4fc2-8780-21690d6aee4f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Max_Mensj =
+			
+			MAXX (
+			    FILTER ( FacDatos1, FacDatos1[Usuario] = SELECTEDVALUE(FacDatos1[Usuario]) ),
+			    FacDatos1[Valor]
+			)
+		displayFolder: Percentiles y boxplot
+		lineageTag: 19c9477e-07f1-4053-89a4-13e0345c966a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure P25_Global =
+			
+			PERCENTILEX.INC ( FacDatos1, FacDatos1[Valor], 0.25 )
+		displayFolder: Percentiles y boxplot
+		lineageTag: 46e25fa5-2ea9-4fa2-9351-2675fae69916
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure P50_Global =
+			
+			PERCENTILEX.INC ( FacDatos1, FacDatos1[Valor], 0.5 )
+		displayFolder: Percentiles y boxplot
+		lineageTag: cc5e3ea4-31a7-447a-9aeb-b0008e897e3e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure P75_Global =
+			
+			PERCENTILEX.INC ( FacDatos1, FacDatos1[Valor], 0.75 )
+		displayFolder: Percentiles y boxplot
+		lineageTag: c8f408a0-e70c-497c-8922-03a2567c8572
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Min_Global =
+			
+			MIN ( FacDatos1[Valor] )
+		displayFolder: Percentiles y boxplot
+		lineageTag: ac8555b8-4d84-47a8-babf-b205559356e7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Max_Global =
+			
+			MAX ( FacDatos1[Valor] )
+		displayFolder: Percentiles y boxplot
+		lineageTag: e06b2daa-785b-42f1-b34a-30fa7d0bf3a6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure IQR = [P75_Mensj] - [P25_Mensj]
+		displayFolder: Percentiles y boxplot
+		lineageTag: 9df673ef-5471-4b2e-aa21-13766a8af83d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure OutliersPorMensajero = ```
+			
+			VAR P25 =
+			    CALCULATE (
+			        PERCENTILEX.INC ( FacDatos1, FacDatos1[Valor], 0.25 ),
+			        ALLEXCEPT ( FacDatos1, FacDatos1[Usuario] )
+			    )
+			VAR P75 =
+			    CALCULATE (
+			        PERCENTILEX.INC ( FacDatos1, FacDatos1[Valor], 0.75 ),
+			        ALLEXCEPT ( FacDatos1, FacDatos1[Usuario] )
+			    )
+			VAR IQR = P75 - P25
+			RETURN
+			CALCULATE (
+			    COUNTROWS (
+			        FILTER (
+			            FacDatos1,
+			            FacDatos1[Valor] < P25 - 1.5 * IQR
+			                || FacDatos1[Valor] > P75 + 1.5 * IQR
+			        )
+			    ),
+			    ALLEXCEPT ( FacDatos1, FacDatos1[Usuario] )
+			)
+			
+			```
+		formatString: 0
+		displayFolder: Percentiles y boxplot
+		lineageTag: 62225b6b-03b0-4b9f-845a-767e0810be70
+
+	measure 'IQR Global' = [P75_Global] - [P25_Global]
+		displayFolder: Percentiles y boxplot
+		lineageTag: d4900bf2-017a-44d8-ad45-23453b69b8bd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure P25_Diario_Global = PERCENTILEX.INC ( FacDatos1, FacDatos1[Valor], 0.25 )
+		displayFolder: Percentiles y boxplot
+		lineageTag: 9db9a3ff-84ae-4f0b-898b-a26452e36b6c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure P50_Diario_Global = PERCENTILEX.INC ( FacDatos1, FacDatos1[Valor], 0.50 )
+		displayFolder: Percentiles y boxplot
+		lineageTag: 8c2d3ebf-dcf0-4156-a2fb-b2f7dd87c3d4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure P75_Diario_Global = PERCENTILEX.INC ( FacDatos1, FacDatos1[Valor], 0.75 )
+		displayFolder: Percentiles y boxplot
+		lineageTag: d6571a06-9ff4-4833-b110-0be9b321b105
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'IQR DiarioGlobal' = [P75_Diario_Global] - [P25_Diario_Global]
+		displayFolder: Percentiles y boxplot
+		lineageTag: 97ff6874-cfb9-42b3-bbb0-19f6ea61933d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Color_MaximoPorMensajero = ```
+			
+			VAR MensajeroActual = SELECTEDVALUE('dimUsuario Mensajero'[Usuario])
+			VAR MaximoMensajero = 
+			    CALCULATE(
+			        MAXX(VALUES(Fecha), [Media]),
+			        ALLEXCEPT(FacDatos1, FacDatos1[Usuario])
+			    )
+			RETURN
+			IF([Media] = MaximoMensajero, "#FF0000", BLANK())
+			
+			```
+		lineageTag: 5d17b40c-68f6-40a8-9dd6-2c849f17589b
+
+		changedProperty = IsHidden
+
+	measure 'Media General Modelo (Ajustada)' =
+			
+			CALCULATE(
+			    [Media],
+			    ALLSELECTED()
+			)
+		displayFolder: Estadistica Mensajero
+		lineageTag: 7a56e363-f14c-485c-8201-3be5aa2d0a8c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Medida Color Fondo' =
+			
+			IF(
+			    [Media] < [Media General Modelo (Ajustada)],  -- Condición: Si la media actual es menor que la media general
+			    "#FF0000",                         -- Resultado si ES VERDADERO: Rojo (código HEX)
+			    "#FFFFFF"                          -- Resultado si ES FALSO: Blanco (código HEX, sin resaltado)
+			)
+		lineageTag: 62332518-f6d2-432d-9872-5791450ea512
+
+	measure Color_MaximoPorMensajero_V2 = ```
+			
+			VAR MaximoMensajero = 
+			    CALCULATE(
+			        // 1. Calcula la Media (MAXX(VALUES(Fecha), [Media]))
+			        MAXX(
+			            VALUES(Fecha[FechaDiaSemana]), // O solo 'Fecha', dependiendo de cómo esté configurada tu Matriz
+			            [Media]
+			        ),
+			        // 2. Modifica el contexto de filtro:
+			        //    Elimina el filtro de Fecha/FechaDiaSemana para encontrar el Max.
+			        //    Mantiene todos los demás filtros (Usuario, Estadistica, etc.)
+			        ALL('Fecha'), // Asume que tienes una tabla 'Fecha' separada
+			        ALL(Fecha[FechaDiaSemana]) // Elimina el filtro que pone el eje de la matriz
+			    )
+			RETURN
+			IF(
+			    ISBLANK([Media]),
+			    BLANK(),
+			    IF([Media] = MaximoMensajero, "#FF0000", BLANK())
+			)
+			```
+		lineageTag: f6918730-1ff6-406e-a873-2d42ba73f1e5
+
+	/// Mide la eficiencia diaria de entregas considerando entregas controladas de plataforma a FQ destino y restando incidencias de entrega.
+	measure 'Eficiencia Entregas Diarias' =
+			VAR TotalEntregasControladas = CALCULATE(COUNTROWS(FacMensual_Control_Mensajeros), FacMensual_Control_Mensajeros[Estado] = "Controlada", FacMensual_Control_Mensajeros[Origen] = "Plataforma", FacMensual_Control_Mensajeros[Destino] = "FQ")
+			VAR IncidenciasEntrega = CALCULATE(COUNTROWS(FacMensual_Control_Mensajeros), FacMensual_Control_Mensajeros[Estadisticas] = "Entrega")
+			VAR NoEntregados = TotalEntregasControladas - ( [Total Entregas] - IncidenciasEntrega )
+			RETURN
+			    DIVIDE([Total Entregas] - NoEntregados, [Total Entregas])
+		displayFolder: Eficiencia
+		lineageTag: c22e0360-6e0f-402f-9a99-e8f9e9e54291
+
+	/// Cuenta las incidencias de entrega diarias según el campo Estadisticas.
+	measure 'Total Incidencias Entrega' = CALCULATE(COUNTROWS(FacMensual_Control_Mensajeros), FacMensual_Control_Mensajeros[Grupo] = "Entrega")
+		formatString: 0
+		displayFolder: Eficiencia
+		lineageTag: a88c9f09-34e2-44e0-b5ee-a442376a12c4
+
+	measure 'Entregas Promedio dia Mensajero' = ```
+			
+			AVERAGEX(
+			    SUMMARIZE(
+			        FacMensual_Control_Mensajeros, 
+			        'dimUsuario Mensajero'[Usuario],
+			        Fecha[Fecha]),
+			    [Total Entregas]
+			)
+			```
+		displayFolder: Estadistica Mensajero
+		lineageTag: 520d87e1-1125-425d-b442-24dec470424f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Mayor numero Entregas diario por Mensajero' = ```
+			
+			MAXX(
+			    FILTER(
+			        SUMMARIZECOLUMNS(
+			            'dimUsuario Mensajero'[Usuario],
+			            Fecha[Laborable],
+			            "Total Entregas", [Total Entregas]
+			        ),
+			        Fecha[Laborable] = "Laborable"
+			    ),
+			    [Total Entregas]
+			)
+			
+			```
+		formatString: 0
+		displayFolder: Estadistica Mensajero
+		lineageTag: 98ca0605-8021-48e7-bc54-57b040cd4ec3
+
+	measure 'Nombre del Mejor Mensajero' =
+			
+			VAR Mayor_entregas_diario =
+			    [Mayor numero Entregas diario por Mensajero]
+			VAR Mejor_mensajero_diario =
+			    FILTER(
+			        SUMMARIZE(
+			            FacMensual_Control_Mensajeros,
+			            'dimUsuario Mensajero'[Nombre],
+			            Fecha[Laborable],
+			            "Total Entregas", [Total Entregas]
+			        ),
+			        Fecha[Laborable] = "Laborable"
+			            && [Mayor numero Entregas diario por Mensajero]= Mayor_entregas_diario
+			    )
+			VAR Resultado =
+			    CONCATENATEX(
+			        Mejor_mensajero_diario,
+			        'dimUsuario Mensajero'[Nombre],
+			        ", "
+			    )
+			RETURN
+			    Resultado
+		displayFolder: Estadistica Mensajero
+		lineageTag: d7ea1d0f-8127-4656-974b-71adbafb1c07
+
+	measure 'Numero veces Mejor Mensajero Entregas' = ```
+			
+			COUNTROWS(
+			    FILTER(
+			        SUMMARIZE(
+			            FacMensual_Control_Mensajeros,
+			            'dimUsuario Mensajero'[Nombre],
+			            Fecha[Laborable],
+			            "Total Entregas", [Total Entregas]
+			        ),
+			        Fecha[Laborable] = "Laborable"
+			            && [Total Entregas] = [Mayor numero Entregas diario por Mensajero]
+			            && 'dimUsuario Mensajero'[Nombre] = SELECTEDVALUE('dimUsuario Mensajero'[Nombre])
+			    )
+			)
+			
+			```
+		formatString: 0
+		displayFolder: Estadistica Mensajero
+		lineageTag: 4450c749-635e-434d-a0f5-53d210388ccf
+
+	measure 'Mensajero Estrella' =
+			
+			VAR tbUsuarios =
+			ADDCOLUMNS(
+			    SUMMARIZE('dimUsuario Mensajero','dimUsuario Mensajero'[Usuario],'dimUsuario Mensajero'[Nombre]),
+			    "TotalEntregas", [Total Entregas]
+			)
+			VAR Resultado = MAXX(TOPN(1, tbUsuarios, [Total Entregas], DESC), 'dimUsuario Mensajero'[Nombre])
+			RETURN Resultado
+		displayFolder: Estadistica Mensajero
+		lineageTag: 2161d7ab-8ea7-4f27-8015-88aa866e3991
+
+	partition Medidas = m
+		mode: import
+		source =
+				let
+				    Origen = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Columna1 = _t]),
+				    #"Columnas quitadas" = Table.RemoveColumns(Origen,{"Columna1"})
+				in
+				    #"Columnas quitadas"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navegación
+

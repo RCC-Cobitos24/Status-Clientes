@@ -1,0 +1,96 @@
+table Hora
+	lineageTag: fa5f633b-ecef-4516-a17e-d3506a001059
+
+	column IdHora
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: c4de57aa-c622-4a54-89a7-887d1174cf81
+		summarizeBy: none
+		sourceColumn: IdHora
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column HoraSK
+		dataType: int64
+		formatString: 0
+		lineageTag: b25ceb64-6c58-4750-90a4-4a3e5f65ec56
+		summarizeBy: none
+		sourceColumn: HoraSK
+
+		annotation SummarizationSetBy = User
+
+	column HoraNum
+		dataType: int64
+		formatString: 0
+		lineageTag: 8669a8a1-50e0-490e-a6ef-1946560c35e9
+		summarizeBy: none
+		sourceColumn: HoraNum
+
+		annotation SummarizationSetBy = User
+
+	column MinutoNum
+		dataType: int64
+		formatString: 0
+		lineageTag: b568e590-5e6d-4a34-9352-26582d867d81
+		summarizeBy: none
+		sourceColumn: MinutoNum
+
+		annotation SummarizationSetBy = User
+
+	column SegundoNum
+		dataType: double
+		lineageTag: a4e7bf5d-811d-4c91-b7b8-60b98e0021e2
+		summarizeBy: none
+		sourceColumn: SegundoNum
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column AM-PM
+		dataType: string
+		lineageTag: 471a476a-cd9d-467b-bd87-5707fe629412
+		summarizeBy: none
+		sourceColumn: AM-PM
+
+		annotation SummarizationSetBy = Automatic
+
+	column Turno
+		dataType: string
+		lineageTag: 7d60bb4b-4d4e-4aa8-a4c6-9a7ee0cd9c6b
+		summarizeBy: none
+		sourceColumn: Turno
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Hora = m
+		mode: import
+		source =
+				let
+				  // Para Horas:      Contador ->    24, #duration( 0, 1, 0, 0 )
+				  // Para Minutos:    Contador ->  1440, #duration( 0, 0, 1, 0 )
+				  // Para Segundos:   Contador -> 86400, #duration( 0, 0, 0, 1 )
+				  // *** Rara vez bajaremos a Segundos en esta Dimensión, pero dejo aquí cómo se hace a los 3 niveles
+				  Contador = 1440,
+				  Origen = List.Times(#time(0, 0, 0), Contador, #duration( 0, 0, 1, 0 )),
+				    #"Convertida en tabla" = Table.FromList(Origen, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+				    IdHora = Table.RenameColumns(#"Convertida en tabla",{{"Column1", "IdHora"}}),
+				    #"Tipo cambiado Hora" = Table.TransformColumnTypes(IdHora,{{"IdHora", type time}}),
+				    HoraSK = Table.AddColumn(#"Tipo cambiado Hora", "HoraSK", each Time.Hour([ IdHora] ) * 10000 +
+				Time.Minute( [IdHora] ) * 100 +
+				Time.Second( [IdHora] )),
+				    #"Hora insertada" = Table.AddColumn(HoraSK, "HoraNum", each Time.Hour([IdHora]), Int64.Type),
+				    #"Minuto insertado" = Table.AddColumn(#"Hora insertada", "MinutoNum", each Time.Minute([IdHora]), Int64.Type),
+				    #"Segundo insertado" = Table.AddColumn(#"Minuto insertado", "SegundoNum", each Time.Second([IdHora]), type number),
+				    #"AM-PM" = Table.AddColumn(#"Segundo insertado", "AM-PM", each if [IdHora] < #time(12, 0, 0) then "AM" else "PM"),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(#"AM-PM",{{"HoraSK", Int64.Type}, {"AM-PM", type text}}),
+				    #"Columna condicional agregada" = Table.AddColumn(#"Tipo cambiado", "Turno", each if [HoraSK] > 80000 and [HoraSK] < 150000 then "Turno Mañana" else if [HoraSK] > 150100 and [HoraSK] < 200000 then "Turno Tarde" else "Otro Turno")
+				in
+				    #"Columna condicional agregada"
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+

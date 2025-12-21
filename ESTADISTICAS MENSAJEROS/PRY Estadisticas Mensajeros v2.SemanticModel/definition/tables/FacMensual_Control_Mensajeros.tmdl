@@ -1,0 +1,219 @@
+table FacMensual_Control_Mensajeros
+	lineageTag: 22cc7326-eafb-48b2-9e64-22ee71f52afc
+
+	column Grupo
+		dataType: string
+		lineageTag: 79ad9b65-0d61-4944-a428-76baa458d8b3
+		summarizeBy: none
+		sourceColumn: Grupo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'N. Envío'
+		dataType: string
+		lineageTag: c29eeac1-e344-4e86-bd12-264a5326c3dc
+		summarizeBy: none
+		sourceColumn: N. Envío
+
+		annotation SummarizationSetBy = Automatic
+
+	column Código
+		dataType: string
+		lineageTag: 69f11d48-1608-4cd2-a388-fcf2bddae8b1
+		summarizeBy: none
+		sourceColumn: Código
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mensajero
+		dataType: string
+		lineageTag: ef23408f-f7e1-4063-ad9c-4f5604bf72ab
+		summarizeBy: none
+		sourceColumn: Mensajero
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'CP - Poblacion'
+		dataType: string
+		lineageTag: dd9b3ea1-bf21-4397-849f-a0a9a54c9546
+		summarizeBy: none
+		sourceColumn: CP - Poblacion
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nombre Vía'
+		dataType: string
+		lineageTag: ff967c64-97f4-4458-8b8c-ee858d0f9c5b
+		summarizeBy: none
+		sourceColumn: Nombre Vía
+
+		annotation SummarizationSetBy = Automatic
+
+	column Servicio
+		dataType: string
+		lineageTag: 4f261dc7-20bc-4eb4-91ac-d3c57b8848da
+		summarizeBy: none
+		sourceColumn: Servicio
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fecha
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: e9ad28e3-b1da-4d61-8c8b-c2bb0d5c6302
+		summarizeBy: none
+		sourceColumn: Fecha
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Hora-MInutos
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: ae6a412d-be7f-42c5-a635-50c8bcfe4658
+		summarizeBy: none
+		sourceColumn: Hora-MInutos
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column 'Total Bultos'
+		dataType: int64
+		formatString: 0
+		lineageTag: 113a49ed-5e73-47c0-91cc-27059961b4bd
+		summarizeBy: sum
+		sourceColumn: Total Bultos
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Total kilos'
+		dataType: double
+		lineageTag: c57a3d22-8c5e-4fbc-81e4-4397f5a00624
+		summarizeBy: sum
+		sourceColumn: Total kilos
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Abonado
+		dataType: string
+		lineageTag: 4bf25379-7385-495a-a2a6-564776521a96
+		summarizeBy: none
+		sourceColumn: Abonado
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cliente
+		dataType: string
+		lineageTag: b2455cba-48d8-4f5e-9dab-79260fe1f543
+		summarizeBy: none
+		sourceColumn: Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Franquicia Cliente'
+		dataType: string
+		lineageTag: 9e5dc30c-4684-4a95-b8e5-7a5dcb2b0b81
+		summarizeBy: none
+		sourceColumn: Franquicia Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column Horas
+		dataType: int64
+		formatString: 0
+		lineageTag: a45d4c9e-2939-462d-be91-1d376ca051fe
+		summarizeBy: none
+		sourceColumn: Horas
+
+		annotation SummarizationSetBy = Automatic
+
+	column Minutos
+		dataType: int64
+		formatString: 0
+		lineageTag: f89a1299-af8a-44f6-91dd-0a5f899622cc
+		summarizeBy: sum
+		sourceColumn: Minutos
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tipo Cobro'
+		dataType: string
+		lineageTag: fabc9125-fe62-411d-9972-7169184a16a7
+		summarizeBy: none
+		sourceColumn: Tipo Cobro
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DURACION DAX' =
+			
+			VAR H=HOUR(FacMensual_Control_Mensajeros[Hora-MInutos])*3600
+			VAR M=MINUTE(FacMensual_Control_Mensajeros[Hora-MInutos])*60
+			RETURN
+			H+M
+		formatString: 0
+		lineageTag: 136ccc88-7bc2-432c-a185-d49f951c2c2f
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FacMensual_Control_Mensajeros = m
+		mode: import
+		source =
+				let
+				    Origen = Folder.Files("C:\Users\Usuario\Downloads\ESTADISTICAS\DATOS CONTROL MENSAJEROS"),
+				    #"Invocar función personalizada1" = Table.AddColumn(Origen, "Transformar archivo (2)", each #"Transformar archivo (2)"([Content])),
+				    #"Archivos ocultos filtrados1" = Table.SelectRows(#"Invocar función personalizada1", each [Attributes]?[Hidden]? <> true),
+				    #"Invocar función personalizada2" = Table.AddColumn(#"Archivos ocultos filtrados1", "Transformar archivo (3)", each #"Transformar archivo (3)"([Content])),
+				    #"Otras columnas quitadas2" = Table.SelectColumns(#"Invocar función personalizada2", {"Transformar archivo (3)"}),
+				    #"Columna de tabla expandida2" = Table.ExpandTableColumn(#"Otras columnas quitadas2", "Transformar archivo (3)", Table.ColumnNames(#"Transformar archivo (3)"(#"Archivo de ejemplo (3)"))),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Columna de tabla expandida2",{{"Column1", type text}, {"Column2", type text}}),
+				    #"Encabezados promovidos" = Table.PromoteHeaders(#"Tipo cambiado", [PromoteAllScalars=true]),
+				    #"Columnas quitadas1" = Table.RemoveColumns(#"Encabezados promovidos",{"Fecha envío"}),
+				    #"Tipo cambiado1" = Table.TransformColumnTypes(#"Columnas quitadas1",{{"Código", type text}, {"Mensajero", type text}, {"Nombre", type text}}),
+				    #"Columnas combinadas" = Table.CombineColumns(#"Tipo cambiado1",{"Código Postal", "Población"},Combiner.CombineTextByDelimiter(" ", QuoteStyle.None),"CP - Poblacion"),
+				    #"Columnas quitadas2" = Table.RemoveColumns(#"Columnas combinadas",{"Tipo Vía"}),
+				    #"Tipo cambiado2" = Table.TransformColumnTypes(#"Columnas quitadas2",{{"Nombre Vía", type text}, {"Número Vía", Int64.Type}}),
+				    #"Columnas quitadas3" = Table.RemoveColumns(#"Tipo cambiado2",{"Número Vía"}),
+				    #"Tipo cambiado3" = Table.TransformColumnTypes(#"Columnas quitadas3",{{"Servicio", type text}}),
+				    #"Columnas quitadas4" = Table.RemoveColumns(#"Tipo cambiado3",{"Nombre receptor", "Importe R/A", "Total"}),
+				    #"Tipo cambiado4" = Table.TransformColumnTypes(#"Columnas quitadas4",{{"Total Bultos", Int64.Type}, {"Total kilos", type number}, {"Abonado", type text}}),
+				    #"Tipo cambiado5" = Table.TransformColumnTypes(#"Tipo cambiado4",{{"Franquicia Cliente", type text}, {"Cliente", type text}, {"Fecha recogida/entrega", type datetime}}),
+				    #"Columna duplicada" = Table.DuplicateColumn(#"Tipo cambiado5", "Fecha recogida/entrega", "Fecha recogida/entrega - Copia"),
+				    #"Fecha insertada" = Table.AddColumn(#"Columna duplicada", "Fecha", each DateTime.Date([#"Fecha recogida/entrega - Copia"]), type date),
+				    #"Hora insertada" = Table.AddColumn(#"Fecha insertada", "Hora", each DateTime.Time([#"Fecha recogida/entrega - Copia"]), type time),
+				    #"Columnas con nombre cambiado" = Table.RenameColumns(#"Hora insertada",{{"Fecha recogida/entrega", "Fecha recogida/entrega-Hora"}}),
+				    #"Columnas quitadas6" = Table.RemoveColumns(#"Columnas con nombre cambiado",{"Fecha recogida/entrega - Copia"}),
+				    #"Columnas reordenadas1" = Table.ReorderColumns(#"Columnas quitadas6",{"Grupo", "N. Envío", "Código", "Mensajero", "Nombre", "CP - Poblacion", "Nombre Vía", "Servicio", "Fecha recogida/entrega-Hora", "Fecha", "Hora", "Total Bultos", "Total kilos", "Abonado", "Cliente", "Franquicia Cliente"}),
+				    #"Valor reemplazado" = Table.ReplaceValue(#"Columnas reordenadas1","","09999",Replacer.ReplaceValue,{"Código"}),
+				    #"Texto limpio" = Table.TransformColumns(#"Valor reemplazado",{{"Código", Text.Clean, type text}}),
+				    #"Filas filtradas" = Table.SelectRows(#"Texto limpio", each true),
+				    #"Filas filtradas1" = Table.SelectRows(#"Filas filtradas", each [N. Envío] <> "0"),
+				    #"Columna duplicada1" = Table.DuplicateColumn(#"Filas filtradas1", "Hora", "Hora - Copia"),
+				    #"Hora insertada1" = Table.AddColumn(#"Columna duplicada1", "Hora.1", each Time.Hour([#"Hora - Copia"]), Int64.Type),
+				    #"Minuto insertado" = Table.AddColumn(#"Hora insertada1", "Minuto", each Time.Minute([#"Hora - Copia"]), Int64.Type),
+				    #"Columnas quitadas7" = Table.RemoveColumns(#"Minuto insertado",{"Hora - Copia"}),
+				    #"Columnas reordenadas2" = Table.ReorderColumns(#"Columnas quitadas7",{"Grupo", "N. Envío", "Código", "Mensajero", "Nombre", "CP - Poblacion", "Nombre Vía", "Servicio", "Fecha recogida/entrega-Hora", "Fecha", "Hora", "Hora.1", "Minuto", "Total Bultos", "Total kilos", "Abonado", "Cliente", "Franquicia Cliente"}),
+				    #"Columnas con nombre cambiado2" = Table.RenameColumns(#"Columnas reordenadas2",{{"Hora", "Hora-MInutos"}, {"Hora.1", "Horas"}, {"Minuto", "Minutos"}}),
+				    #"Tipo cambiado6" = Table.TransformColumnTypes(#"Columnas con nombre cambiado2",{{"Horas", Int64.Type}, {"Minutos", Int64.Type}}),
+				    #"Filas filtradas2" = Table.SelectRows(#"Tipo cambiado6", each true),
+				    #"Valor reemplazado1" = Table.ReplaceValue(#"Filas filtradas2","","09999",Replacer.ReplaceValue,{"Mensajero"}),
+				    #"Filas filtradas3" = Table.SelectRows(#"Valor reemplazado1", each ([Código] <> null)),
+				    #"Valor reemplazado2" = Table.ReplaceValue(#"Filas filtradas3","","09999",Replacer.ReplaceValue,{"Código"}),
+				    #"Filas filtradas4" = Table.SelectRows(#"Valor reemplazado2", each true),
+				    #"Valor reemplazado3" = Table.ReplaceValue(#"Filas filtradas4","","09999",Replacer.ReplaceValue,{"Mensajero"}),
+				    #"Filas filtradas5" = Table.SelectRows(#"Valor reemplazado3", each ([Código] <> "Código")),
+				    #"Filas ordenadas" = Table.Sort(#"Filas filtradas5",{{"Código", Order.Ascending}}),
+				    #"Tipo cambiado7" = Table.TransformColumnTypes(#"Filas ordenadas",{{"Código", type text}}),
+				    #"Texto recortado" = Table.TransformColumns(#"Tipo cambiado7",{{"Código", Text.Trim, type text}}),
+				    #"Columnas quitadas" = Table.RemoveColumns(#"Texto recortado",{"Nombre", "Fecha recogida/entrega-Hora", "EntregaSabadoPermitido", "TipoRetorno"})
+				in
+				    #"Columnas quitadas"
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+

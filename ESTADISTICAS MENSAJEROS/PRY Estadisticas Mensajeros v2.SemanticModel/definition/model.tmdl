@@ -1,0 +1,47 @@
+model Model
+	culture: es-ES
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: es-ES
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup ParametrosDimFecha
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transformar archivo de DATOS CONTROL MENSAJEROS (2)'
+
+	annotation PBI_QueryGroupOrder = 3
+
+queryGroup 'Transformar archivo de DATOS CONTROL MENSAJEROS (2)\Consultas auxiliares'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transformar archivo de Mensual_Control_Mensajeros'
+
+	annotation PBI_QueryGroupOrder = 10
+
+queryGroup 'Transformar archivo de Mensual_Control_Mensajeros\Consultas auxiliares'
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["AñoIni","AñoFin","AñosDesvioHoy","FechaIni","FechaFin","FechaFinDesvioAñoActual","Fecha","Hora","dimEstadisticas","FechaEspecial","FacDatos1","dimTipos","Funcion","Medidas","FacMensual_Control_Mensajeros","Archivo de ejemplo (2)","Parámetro2","Transformar archivo (2)","dimUsuario Mensajero","Parámetro3","Transformar archivo de ejemplo (3)","Archivo de ejemplo (3)","Transformar archivo (3)","dimGrupos","TablaRangosHoras"]
+
+annotation PBI_ProTooling = ["DaxQueryView_Desktop","MCP-PBIModeling","TMDLView_Desktop","DevMode"]
+
+ref table Fecha
+ref table Hora
+ref table dimEstadisticas
+ref table dimTipos
+ref table FacDatos1
+ref table Medidas
+ref table FacMensual_Control_Mensajeros
+ref table 'dimUsuario Mensajero'
+ref table dimGrupos
+ref table TablaRangosHoras
+
+ref cultureInfo es-ES
+

@@ -1,0 +1,34 @@
+table dimEstadisticas
+	lineageTag: c4029fad-e202-45e9-a1f6-faa3f0fd66d0
+
+	column Estadística
+		dataType: string
+		lineageTag: 252cc30d-325d-4394-8a60-d0b3128b4dcb
+		summarizeBy: none
+		sourceColumn: Estadística
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tipo
+		dataType: string
+		lineageTag: a1993ff9-bdee-4a5e-af85-71b50db88b86
+		summarizeBy: none
+		sourceColumn: Tipo
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimEstadisticas = m
+		mode: import
+		source =
+				let
+				    Origen = Excel.Workbook(File.Contents("C:\Users\Usuario\Downloads\ESTADISTICAS\TABLA USUARIOS-MENSAJEROS\TABLA ESTADISTICAS.xlsx"), null, true),
+				    ESTADISTICAS_Sheet = Origen{[Item="ESTADISTICAS",Kind="Sheet"]}[Data],
+				    #"Encabezados promovidos" = Table.PromoteHeaders(ESTADISTICAS_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Encabezados promovidos",{{"Estadística", type text}, {"Tipo", type text}})
+				in
+				    #"Tipo cambiado"
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+

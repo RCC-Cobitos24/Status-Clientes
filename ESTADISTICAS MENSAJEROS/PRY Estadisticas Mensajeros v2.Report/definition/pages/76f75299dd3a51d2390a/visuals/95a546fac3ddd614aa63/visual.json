@@ -1,0 +1,101 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "95a546fac3ddd614aa63",
+  "position": {
+    "x": 12.222222222222221,
+    "y": 384.44444444444446,
+    "z": 6000,
+    "height": 280,
+    "width": 1245.5555555555554,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "TablaRangosHoras"
+                    }
+                  },
+                  "Property": "Horario M-T"
+                }
+              },
+              "queryRef": "TablaRangosHoras.Horario M-T",
+              "nativeQueryRef": "Horario M-T",
+              "active": false
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "TablaRangosHoras"
+                    }
+                  },
+                  "Property": "Rango"
+                }
+              },
+              "queryRef": "TablaRangosHoras.Rango",
+              "nativeQueryRef": "Rango",
+              "active": false
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fecha"
+                    }
+                  },
+                  "Property": "MesC"
+                }
+              },
+              "queryRef": "Fecha.MesC",
+              "nativeQueryRef": "MesC",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
+                  "Property": "Total Entregas"
+                }
+              },
+              "queryRef": "Medidas.Total Entregas",
+              "nativeQueryRef": "Total Entregas"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
+                  "Property": "Total Recogidas"
+                }
+              },
+              "queryRef": "Medidas.Total Recogidas",
+              "nativeQueryRef": "Total Recogidas"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,60 @@
+table FacDatos1
+	lineageTag: 5026b078-54ff-4c2e-9351-911ef2150c72
+
+	column Fecha
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 89c75561-a9d7-4606-9d33-c0cf36adb69a
+		summarizeBy: none
+		sourceColumn: Fecha
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Usuario
+		dataType: string
+		lineageTag: fdf6ade8-d6cc-41ea-b9fb-77abc63bb38e
+		summarizeBy: none
+		sourceColumn: Usuario
+
+		annotation SummarizationSetBy = Automatic
+
+	column Estadística
+		dataType: string
+		lineageTag: 24a95179-f1b1-4fe6-9fd3-ab53f821c6ab
+		summarizeBy: none
+		sourceColumn: Estadística
+
+		annotation SummarizationSetBy = Automatic
+
+	column Valor
+		dataType: double
+		lineageTag: 61e7c71e-c3ba-49d4-8d8b-0efa80a0cb73
+		summarizeBy: sum
+		sourceColumn: Valor
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition FacDatos1 = m
+		mode: import
+		source =
+				let
+				    Origen = Folder.Files("C:\Users\Usuario\Downloads\ESTADISTICAS\DATOS"),
+				    #"Otras columnas quitadas" = Table.SelectColumns(Origen,{"Content"}),
+				    #"Índice agregado" = Table.AddIndexColumn(#"Otras columnas quitadas", "Índice", 0, 1, Int64.Type),
+				    #"Función personalizada invocada" = Table.AddColumn(#"Índice agregado", "Funcion", each Funcion([Índice])),
+				    #"Se expandió Funcion" = Table.ExpandTableColumn(#"Función personalizada invocada", "Funcion", {"Fecha", "Usuario", "Estadística", "Valor"}, {"Fecha", "Usuario", "Estadística", "Valor"}),
+				    #"Columnas quitadas" = Table.RemoveColumns(#"Se expandió Funcion",{"Content", "Índice"}),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Columnas quitadas",{{"Usuario", type text}, {"Fecha", type date}, {"Estadística", type text}, {"Valor", type number}}),
+				    #"Filas filtradas" = Table.SelectRows(#"Tipo cambiado", each ([Estadística] = " Bultos entregados" or [Estadística] = " Bultos recogidos" or [Estadística] = " Bultos recogidos y entregados" or [Estadística] = " Duración llamadas a clientes" or [Estadística] = " Duración llamadas a clientes entrega" or [Estadística] = " Duración llamadas a clientes recogida" or [Estadística] = " Entregas controladas al salir de plataforma a FQ destino" or [Estadística] = " Entregas finalizadas" or [Estadística] = " Entregas finalizadas misma dirección" or [Estadística] = " Incidencias de entrega" or [Estadística] = " Incidencias de recogida" or [Estadística] = " Recogidas finalizadas" or [Estadística] = " Recogidas finalizadas misma dirección" or [Estadística] = " Recogidas y entregas finalizadas" or [Estadística] = " Recogidas y entregas finalizadas misma dirección" or [Estadística] = " Total controles de tránsito interno" or [Estadística] = " Total controles de tránsito interno de entrega" or [Estadística] = " Total controles de tránsito interno de recogida")),
+				    #"Texto recortado" = Table.TransformColumns(#"Filas filtradas",{{"Usuario", Text.Trim, type text}})
+				in
+				    #"Texto recortado"
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,157 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "307243a4be56081e97e6",
+  "position": {
+    "x": 16.20578778135048,
+    "y": 159.7427652733119,
+    "z": 4000,
+    "height": 511.63987138263661,
+    "width": 566.04501607717043,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fecha"
+                    }
+                  },
+                  "Property": "Fecha"
+                }
+              },
+              "queryRef": "Fecha.Fecha",
+              "nativeQueryRef": "Fecha"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
+                  "Property": "P25_Diario_Global"
+                }
+              },
+              "queryRef": "Medidas.P25_Diario_Global",
+              "nativeQueryRef": "P25_Diario_Global"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
+                  "Property": "P50_Diario_Global"
+                }
+              },
+              "queryRef": "Medidas.P50_Diario_Global",
+              "nativeQueryRef": "P50_Diario_Global"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
+                  "Property": "Media"
+                }
+              },
+              "queryRef": "Medidas.Media",
+              "nativeQueryRef": "Media"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
+                  "Property": "IQR DiarioGlobal"
+                }
+              },
+              "queryRef": "Medidas.IQR DiarioGlobal",
+              "nativeQueryRef": "IQR DiarioGlobal"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
+                  "Property": "P75_Diario_Global"
+                }
+              },
+              "queryRef": "Medidas.P75_Diario_Global",
+              "nativeQueryRef": "P75_Diario_Global"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Fecha"
+                  }
+                },
+                "Property": "Fecha"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "95.0064335243745D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Medidas.P25_Diario_Global"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "76.4855232071014D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Medidas.P50_Diario_Global"
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

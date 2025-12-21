@@ -1,0 +1,17 @@
+DEFINE
+    MEASURE 'Medidas'[Mayor numero Entregas diario por Mensajero] = CALCULATE(
+    MAXX(
+        SUMMARIZE(
+            FacMensual_Control_Mensajeros,
+            'dimUsuario Mensajero'[Usuario],
+            Fecha[Laborable]
+        ),
+        [Total Entregas]
+    ),
+    Fecha[Laborable]= "Laborable"
+)
+
+EVALUATE
+    SUMMARIZECOLUMNS(
+        "Mayor numero Entregas diario por Mensajero", [Mayor numero Entregas diario por Mensajero]
+    )

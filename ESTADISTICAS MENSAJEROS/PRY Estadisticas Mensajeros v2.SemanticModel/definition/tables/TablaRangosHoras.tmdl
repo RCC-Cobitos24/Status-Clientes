@@ -1,0 +1,110 @@
+table TablaRangosHoras
+	lineageTag: 360dad94-6f70-437b-b4d4-eebbf4ebf50d
+
+	column Orden
+		dataType: string
+		lineageTag: 315563e9-7536-4d3c-8243-e40302a9e276
+		summarizeBy: none
+		sourceColumn: Orden
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rango
+		dataType: string
+		lineageTag: 72e7d45b-44a7-45c7-a09b-603d1b72ce2a
+		summarizeBy: none
+		sourceColumn: Rango
+		sortByColumn: Orden
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column ClaveHora
+		dataType: int64
+		formatString: 0
+		lineageTag: b319254d-8fc2-4add-ac62-ad00d86ca5c3
+		summarizeBy: none
+		sourceColumn: ClaveHora
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Horario M-T'
+		dataType: string
+		lineageTag: 6e776329-dc25-4680-b7af-08610ec29d07
+		summarizeBy: none
+		sourceColumn: Horario M-T
+
+		annotation SummarizationSetBy = Automatic
+
+	partition TablaRangosHoras = m
+		mode: import
+		source = ```
+				let
+				    // 1. Recreación de la tabla DATATABLE en Power Query (M)
+				    Source = #table(
+				        {"Orden", "Rango", "HoraMin", "HoraMax"}, 
+				        {
+				            {1, "8 - 10 Horas", #datetime(2000, 1, 1, 8, 0, 0), #datetime(2000, 1, 1, 10, 0, 0)},
+				            {2, "10 - 12 Horas", #datetime(2000, 1, 1, 10, 1, 0), #datetime(2000, 1, 1, 12, 0, 0)},
+				            {3, "12 - 14 Horas", #datetime(2000, 1, 1, 12, 1, 0), #datetime(2000, 1, 1, 14, 0, 0)},
+				            {4, "14 - 15 Horas", #datetime(2000, 1, 1, 14, 1, 0), #datetime(2000, 1, 1, 15, 0, 0)},
+				            {5, "16 - 18 Horas", #datetime(2000, 1, 1, 16, 0, 0), #datetime(2000, 1, 1, 18, 0, 0)},
+				            {6, "18 - 20 Horas", #datetime(2000, 1, 1, 18, 1, 0), #datetime(2000, 1, 1, 20, 0, 0)},
+				            {7, "20 - 21 Horas", #datetime(2000, 1, 1, 20, 1, 0), #datetime(2000, 1, 1, 21, 0, 0)}
+				        }
+				    ),
+				    
+				    // 2. Extracción de la hora de inicio y fin como número entero
+				    // Se usa Int64.Type (Número Entero) para asegurar la compatibilidad con la clave de la tabla de hechos.
+				    #"Insertar Hora Inicio" = Table.AddColumn(Source, "HoraInicioInt", each Time.Hour([HoraMin]), Int64.Type),
+				    #"Insertar Hora Fin" = Table.AddColumn(#"Insertar Hora Inicio", "HoraFinInt", each Time.Hour([HoraMax]), Int64.Type),
+				    
+				    // 3. Generar la lista de horas [ClaveHora]
+				    // La clave aquí es ajustar el límite superior de la lista para EVITAR EL SOLAPAMIENTO.
+				    // Usamos 'HoraFinInt - 1' si el rango termina en punto (XX:00), 
+				    // pero mantenemos el 'HoraFinInt' si el rango es impar (14:01 a 15:00).
+				    #"Insertar Horas en Rango" = Table.AddColumn(#"Insertar Hora Fin", "HorasEnRango", 
+				        each 
+				            let
+				                // Si la HoraMin es XX:00 (exacta), usamos la hora de inicio (Ej: 8).
+				                _HoraInicio = Number.From([HoraInicioInt]),
+				                // Para evitar el solapamiento, el rango debe terminar UNA HORA ANTES de la HoraFin si esta es exacta.
+				                // Si HoraMax es 10:00:00 (hora exacta), el rango ClaveHora debe terminar en 9.
+				                // Si HoraMax es 15:00:00, el rango debe terminar en 14 (ya que la siguiente hora es 15:01).
+				                // Simplificamos la lógica: el rango termina una hora antes del límite superior de la columna 'HoraMax'
+				                // a menos que sea el último rango.
+				                _AjusteFin = 
+				                    if [Orden] = 1 then [HoraFinInt] - 1 // Rango 8-10. Clave: 8, 9
+				                    else if [Orden] = 2 then [HoraFinInt] - 1 // Rango 10-12. Clave: 10, 11
+				                    else if [Orden] = 3 then [HoraFinInt] - 1 // Rango 12-14. Clave: 12, 13
+				                    else if [Orden] = 4 then [HoraFinInt] // Rango 14-15. Clave: 14, 15
+				                    else if [Orden] = 5 then [HoraFinInt] - 1 // Rango 16-18. Clave: 16, 17
+				                    else if [Orden] = 6 then [HoraFinInt] - 1 // Rango 18-20. Clave: 18, 19
+				                    else [HoraFinInt] // Rango 20-21. Clave: 20, 21 (Fin del día)
+				            in
+				                {_HoraInicio.._AjusteFin}
+				    ),
+				    
+				    // 4. Expandir la lista a nuevas filas
+				    #"Expandir Horas" = Table.ExpandListColumn(#"Insertar Horas en Rango", "HorasEnRango"),
+				    
+				    // 5. Renombrar la clave (asegura tipo entero)
+				    #"Renombrar Clave" = Table.RenameColumns(#"Expandir Horas",{{"HorasEnRango", "ClaveHora"}}),
+				    #"Cambiar Tipo Clave" = Table.TransformColumnTypes(#"Renombrar Clave",{{"ClaveHora", Int64.Type}}),
+				    
+				    // 6. Limpieza (Columnas finales necesarias)
+				    #"Columnas Finales" = Table.SelectColumns(#"Cambiar Tipo Clave",{"Orden", "Rango", "ClaveHora"}),
+				    #"Columna condicional agregada" = Table.AddColumn(#"Columnas Finales", "Personalizado", each if [ClaveHora] < 16 then "Mañanas" else "Tardes"),
+				    #"Columnas con nombre cambiado" = Table.RenameColumns(#"Columna condicional agregada",{{"Personalizado", "Horario M-T"}})
+				
+				in
+				    #"Columnas con nombre cambiado"
+				```
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+
