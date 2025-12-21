@@ -4,14 +4,14 @@
     {
       "ordinal": 0,
       "scrollPosition": {
-        "x": 871.42857142857144,
-        "y": 0
+        "x": 255,
+        "y": 318.75
       },
       "nodes": [
         {
           "location": {
-            "x": 569,
-            "y": 53.333333333333336
+            "x": 564,
+            "y": 173.33333333333334
           },
           "nodeIndex": "CARPETA DATOS CLIENTES",
           "nodeLineageTag": "96e2af11-9f8b-4652-a52b-235a8f86b959",
@@ -23,7 +23,7 @@
         },
         {
           "location": {
-            "x": 284,
+            "x": 176.5,
             "y": 0
           },
           "nodeIndex": "Fecha",
@@ -36,7 +36,7 @@
         },
         {
           "location": {
-            "x": 1055.1111111111113,
+            "x": 1115.1111111111113,
             "y": 0
           },
           "nodeIndex": "1_MEDIDAS",
@@ -45,17 +45,17 @@
             "height": 145,
             "width": 234
           },
-          "zIndex": 5
+          "zIndex": 17
         },
         {
           "location": {
-            "x": 1096.1428571428571,
-            "y": 521.23809523809518
+            "x": 1116.1428571428571,
+            "y": 521.73809523809518
           },
           "nodeIndex": "dimAbonados",
           "nodeLineageTag": "025204ee-371d-4716-94ce-789d76f76371",
           "size": {
-            "height": 128,
+            "height": 145,
             "width": 234
           },
           "zIndex": 6
@@ -88,8 +88,8 @@
         },
         {
           "location": {
-            "x": 1389.4285714285716,
-            "y": 490.71428571428578
+            "x": 1276.9285714285716,
+            "y": 820.71428571428578
           },
           "nodeIndex": "AuxAbonadosyotros",
           "nodeLineageTag": "4cc8a7c3-acc5-4cf7-bbd5-b67f4906f81a",
@@ -101,8 +101,8 @@
         },
         {
           "location": {
-            "x": 1369.4285714285716,
-            "y": 0
+            "x": 1724.4285714285716,
+            "y": 222.5
           },
           "nodeIndex": "ValorTop",
           "nodeLineageTag": "ef556ef9-eed7-415e-ae1a-71d621f940de",
@@ -110,7 +110,7 @@
             "height": 224,
             "width": 234
           },
-          "zIndex": 3
+          "zIndex": 4
         },
         {
           "location": {
@@ -123,7 +123,7 @@
             "height": 200,
             "width": 234
           },
-          "zIndex": 4
+          "zIndex": 5
         },
         {
           "location": {
@@ -140,21 +140,21 @@
         },
         {
           "location": {
-            "x": 1101.4285714285716,
-            "y": 716.16666666666674
+            "x": 1316.4285714285716,
+            "y": 1083.6666666666667
           },
           "nodeIndex": "TablaRangosPeso",
           "nodeLineageTag": "5edf600f-9165-4895-838b-33ff6da4110a",
           "size": {
-            "height": 200,
+            "height": 187.5,
             "width": 234
           },
-          "zIndex": 14
+          "zIndex": 15
         },
         {
           "location": {
-            "x": 835.09523809523819,
-            "y": 511.41666666666669
+            "x": 880.09523809523819,
+            "y": 1088.9166666666667
           },
           "nodeIndex": "TablaPesoConRango",
           "nodeLineageTag": "c76520e5-7905-4567-93fe-4e04333ca557",
@@ -162,12 +162,12 @@
             "height": 310,
             "width": 234
           },
-          "zIndex": 15
+          "zIndex": 14
         },
         {
           "location": {
-            "x": 564.857142857143,
-            "y": 808.88888888888891
+            "x": 469.857142857143,
+            "y": 1003.8888888888889
           },
           "nodeIndex": "TablaTipoGeografico",
           "nodeLineageTag": "dce46e2f-9a8d-4e0e-bf86-e089de66d67d",
@@ -179,36 +179,11 @@
         },
         {
           "location": {
-            "x": 1673.4285714285716,
-            "y": 404.44444444444446
+            "x": 1723.4285714285716,
+            "y": 719.44444444444446
           },
           "nodeIndex": "Tabla Segmentador Indicador",
-          "size": {
-            "height": 200,
-            "width": 234
-          },
-          "zIndex": 1
-        },
-        {
-          "location": {
-            "x": 1957.4285714285716,
-            "y": 105.8730158730159
-          },
-          "nodeIndex": "CARPETA DATOS CLIENTES HISTÓRICO",
-          "nodeLineageTag": "historico-96e2af11-9f8b-4652-a52b-235a8f86b959",
-          "size": {
-            "height": 568.57142857142856,
-            "width": 234
-          },
-          "zIndex": 16
-        },
-        {
-          "location": {
-            "x": 2241.4285714285716,
-            "y": 404.44444444444446
-          },
-          "nodeIndex": "PeriodoDatos",
-          "nodeLineageTag": "5f3731db-13c7-456a-83b1-e0629779f0d8",
+          "nodeLineageTag": "1d9d04f6-c6dc-45e3-9066-b605aa7c9496",
           "size": {
             "height": 200,
             "width": 234
@@ -216,18 +191,47 @@
           "zIndex": 2
         },
         {
-          "location": {},
+          "location": {
+            "x": 822.42857142857156,
+            "y": 0
+          },
+          "nodeIndex": "CARPETA DATOS CLIENTES HISTÓRICO",
+          "nodeLineageTag": "historico-96e2af11-9f8b-4652-a52b-235a8f86b959",
+          "size": {
+            "height": 716.07142857142856,
+            "width": 234
+          },
+          "zIndex": 16
+        },
+        {
+          "location": {
+            "x": 1726.4285714285716,
+            "y": 486.94444444444446
+          },
+          "nodeIndex": "PeriodoDatos",
+          "nodeLineageTag": "5f3731db-13c7-456a-83b1-e0629779f0d8",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 1720.4285714285716,
+            "y": 92.5
+          },
           "nodeIndex": "TablaParametros",
           "nodeLineageTag": "b495ae71-2eb1-4e57-aafa-397c73358f82",
           "size": {
             "height": 104,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 1
         }
       ],
       "name": "Todas las tablas",
-      "zoomValue": 70,
+      "zoomValue": 80,
       "pinKeyFieldsToTop": false,
       "showExtraHeaderInfo": false,
       "hideKeyFieldsWhenCollapsed": false,
