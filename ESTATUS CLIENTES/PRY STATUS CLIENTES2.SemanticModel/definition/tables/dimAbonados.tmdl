@@ -29,7 +29,7 @@ table dimAbonados
 				in
 				    #"Valor reemplazado"
 
-	annotation PBI_ResultType = Exception
+	annotation PBI_ResultType = Table
 
 	annotation PBI_NavigationStepName = Navegación
 

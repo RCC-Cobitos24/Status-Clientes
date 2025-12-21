@@ -1167,8 +1167,12 @@ table 1_MEDIDAS
 	measure 'Importe Total' =
 			
 			SUMX(
-			    VALUES('CARPETA DATOS CLIENTES'[Número envío]),
-			    CALCULATE(MAX('CARPETA DATOS CLIENTES'[Total]))
+			    SUMMARIZE(
+			        'CARPETA DATOS CLIENTES',
+			        'CARPETA DATOS CLIENTES'[Número envío],
+			        "TotalPorEnvio", MAX('CARPETA DATOS CLIENTES'[Total])
+			    ),
+			    [TotalPorEnvio]
 			)
 		displayFolder: Medidas Base
 		lineageTag: f36560f0-f7ab-4f26-b9c3-ec312a682fa6
@@ -1220,8 +1224,12 @@ table 1_MEDIDAS
 	measure 'Importe Total (Histórico)' =
 			
 			SUMX(
-			    VALUES('CARPETA DATOS CLIENTES HISTÓRICO'[Número envío]),
-			    CALCULATE(MAX('CARPETA DATOS CLIENTES HISTÓRICO'[Total]))
+			    SUMMARIZE(
+			        'CARPETA DATOS CLIENTES HISTÓRICO',
+			        'CARPETA DATOS CLIENTES HISTÓRICO'[Número envío],
+			        "TotalPorEnvio", MAX('CARPETA DATOS CLIENTES HISTÓRICO'[Total])
+			    ),
+			    [TotalPorEnvio]
 			)
 		formatString: 0
 		displayFolder: Medidas Base
@@ -1229,54 +1237,61 @@ table 1_MEDIDAS
 
 	measure 'Importe Total Dinámico' = ```
 			
-			VAR PeriodoSeleccionado =
-			    SELECTEDVALUE( PeriodoDatos[Periodo] ) // Obtiene la selección ('Actual', 'Histórico', 'Todos')
-			VAR AñoInicio = MAX('TablaParametros'[AñoIni])
-			VAR AñoFin = MAX('TablaParametros'[AñoFin])
-			
-			// Definimos los filtros de fechas (aunque las tablas M ya filtran, esto asegura la robustez en DAX)
-			VAR FiltroActual =
-			    FILTER(
-			        ALL('CARPETA DATOS CLIENTES'),
-			        YEAR('CARPETA DATOS CLIENTES'[Fecha envío]) >= AñoInicio &&
-			        YEAR('CARPETA DATOS CLIENTES'[Fecha envío]) <= AñoFin
-			    )
-			
-			VAR FiltroHistorico =
-			    FILTER(
-			        ALL('CARPETA DATOS CLIENTES HISTÓRICO'),
-			        YEAR('CARPETA DATOS CLIENTES HISTÓRICO'[Fecha envío]) < AñoInicio
-			    )
+			VAR PeriodoSeleccionado = SELECTEDVALUE(PeriodoDatos[Periodo])
 			    
-			VAR Resultado = 
+			RETURN
 			    SWITCH(
 			        TRUE(),
 			        
-			        // 1. Si se selecciona "Actual"
-			        PeriodoSeleccionado = "Actual", 
-			            CALCULATE(
-			                [Importe Total], 
-			                FiltroActual
-			            ),
-			            
-			        // 2. Si se selecciona "Histórico"
-			        PeriodoSeleccionado = "Histórico", 
-			            CALCULATE(
-			                [Importe Total (Histórico)], 
-			                FiltroHistorico
-			            ),
-			            
-			        // 3. Si se selecciona "Todos" o no hay selección
-			        TRUE(),
-			            // Suma de ambas medidas, asegurando que cada una usa su filtro de fecha correspondiente
-			            CALCULATE([Importe Total], FiltroActual) + 
-			            CALCULATE([Importe Total (Histórico)], FiltroHistorico)
+			        // 1. Si se selecciona "Actual", simplemente usa la medida de importe actual.
+			        // La tabla subyacente ya está filtrada por Power Query.
+			        PeriodoSeleccionado = "Actual",
+			        [Importe Total],
+			        
+			        // 2. Si se selecciona "Histórico", simplemente usa la medida de importe histórico.
+			        PeriodoSeleccionado = "Histórico",
+			        [Importe Total (Histórico)],
+			        
+			        // 3. Si se selecciona "Todos" o no hay selección, suma ambas medidas.
+			        // No se necesita CALCULATE porque cada medida opera sobre su propia tabla ya filtrada.
+			        [Importe Total] + [Importe Total (Histórico)]
 			    )
-			RETURN
-			    Resultado
 			```
 		displayFolder: Medidas Base
 		lineageTag: 6a8ba2a0-9a4b-4d3c-8bac-b0cdb39f3e4e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total envios (Histórico)' =
+			
+			DISTINCTCOUNT('CARPETA DATOS CLIENTES HISTÓRICO'[Número envío])
+		formatString: 0
+		displayFolder: Medidas Base
+		lineageTag: a7b1e720-f0b2-4516-a422-9149eed69133
+
+	measure 'Total envios (Dinámico)' = ```
+			
+			VAR PeriodoSeleccionado = SELECTEDVALUE(PeriodoDatos[Periodo])
+			
+			RETURN
+			    SWITCH(
+			        TRUE(),
+			        
+			        // Si se selecciona "Actual", muestra el conteo de la tabla actual.
+			        PeriodoSeleccionado = "Actual",
+			        [Total envios],
+			        
+			        // Si se selecciona "Histórico", muestra el conteo de la tabla histórica.
+			        PeriodoSeleccionado = "Histórico",
+			        [Total envios (Histórico)],
+			        
+			        // Si se selecciona "Todos" o nada, suma ambos conteos.
+			        [Total envios] + [Total envios (Histórico)]
+			    )
+			```
+		formatString: 0
+		displayFolder: Medidas Base
+		lineageTag: 014b296b-ce89-4eb3-958b-09635135a9bc
 
 	partition 1_MEDIDAS = m
 		mode: import

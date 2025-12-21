@@ -4,7 +4,7 @@
     {
       "ordinal": 0,
       "scrollPosition": {
-        "x": 871.14285714285711,
+        "x": 871.42857142857144,
         "y": 0
       },
       "nodes": [
@@ -214,6 +214,16 @@
             "width": 234
           },
           "zIndex": 2
+        },
+        {
+          "location": {},
+          "nodeIndex": "TablaParametros",
+          "nodeLineageTag": "b495ae71-2eb1-4e57-aafa-397c73358f82",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
         }
       ],
       "name": "Todas las tablas",

@@ -126,22 +126,34 @@ table 'CARPETA DATOS CLIENTES HISTÓRICO'
 		mode: import
 		source =
 				let
-					Origen = Folder.Files("C:\\Users\\Usuario\\Downloads\\CARPETA DATOS CLIENTES"),
-					#"Filas filtradas" = Table.SelectRows(Origen, each ([Extension] = ".xlsx")),
-					#"Otras columnas quitadas" = Table.SelectColumns(#"Filas filtradas",{"Content"}),
-					#"Archivos ocultos filtrados1" = Table.SelectRows(#"Otras columnas quitadas", each [Attributes]?[Hidden]? <> true),
-					#"Invocar función personalizada1" = Table.AddColumn(#"Archivos ocultos filtrados1", "Transformar archivo", each #"Transformar archivo"([Content])),
-					#"Otras columnas quitadas1" = Table.SelectColumns(#"Invocar función personalizada1", {"Transformar archivo"}),
-					#"Columna de tabla expandida1" = Table.ExpandTableColumn(#"Otras columnas quitadas1", "Transformar archivo", Table.ColumnNames(#"Transformar archivo"(#"Archivo de ejemplo"))),
-					#"Tipo cambiado" = Table.TransformColumnTypes(#"Columna de tabla expandida1",{{"Peso bulto", type number}, {"Fecha envío", type date}}),
-					#"Filtrar históricos" = Table.SelectRows(
-						#"Tipo cambiado",
-						each Date.Year([Fecha envío]) < Number.FromText(AñoIni)
-					)
+				    // 1. Definir los años para el filtro dinámico automáticamente
+				    AñoActual = Date.Year(DateTime.LocalNow()),
+				    AñoInicioPeriodoActual = AñoActual - 1,
+				
+				    // 2. Origen de los datos
+				    Origen = Folder.Files("C:\\Users\\Usuario\\Downloads\\CARPETA DATOS CLIENTES"),
+				
+				    // 3. Filtrar los archivos relevantes (CORREGIDO EL ORDEN LÓGICO)
+				    #"Filas filtradas por extensión" = Table.SelectRows(Origen, each ([Extension] = ".xlsx")),
+				    #"Archivos ocultos filtrados" = Table.SelectRows(#"Filas filtradas por extensión", each [Attributes]?[Hidden]? <> true),
+				
+				    // 4. Procesar el contenido de los archivos
+				    #"Columnas de contenido conservadas" = Table.SelectColumns(#"Archivos ocultos filtrados", {"Content"}),
+				    #"Función de transformación invocada" = Table.AddColumn(#"Columnas de contenido conservadas", "Transformar archivo", each #"Transformar archivo"([Content])),
+				    #"Otras columnas quitadas" = Table.SelectColumns(#"Función de transformación invocada", {"Transformar archivo"}),
+				    #"Tabla expandida" = Table.ExpandTableColumn(#"Otras columnas quitadas", "Transformar archivo", Table.ColumnNames(#"Transformar archivo"(#"Archivo de ejemplo"))),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Tabla expandida",{{"Peso bulto", type number}, {"Fecha envío", type date}}),
+				
+				    // 5. APLICAR EL FILTRO DINÁMICO Y EFICIENTE PARA DATOS HISTÓRICOS
+				    // Este paso selecciona todas las filas cuya fecha de envío es anterior al 1 de enero del año pasado
+				    #"Datos históricos filtrados" = Table.SelectRows(
+				        #"Tipo cambiado",
+				        each [Fecha envío] < #date(AñoInicioPeriodoActual, 1, 1)
+				    )
 				in
-					#"Filtrar históricos"
+				    #"Datos históricos filtrados"
 
-	annotation PBI_ResultType = Exception
+	annotation PBI_ResultType = Table
 
 	annotation PBI_NavigationStepName = Navegación
 
