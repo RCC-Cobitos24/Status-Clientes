@@ -2,7 +2,9 @@
   "version": "1.0.0",
   "tabOrder": [
     "Consulta 1",
-    "Consulta 2"
+    "Consulta 2",
+    "Consulta 3",
+    "Consulta 4"
   ],
-  "defaultTab": "Consulta 2"
+  "defaultTab": "Consulta 4"
 }

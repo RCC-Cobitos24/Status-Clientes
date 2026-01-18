@@ -1,0 +1,35 @@
+DEFINE
+    MEASURE '1_MEDIDAS'[Importe_Total_Dinamico_2024_NoActivos2025] = VAR AbonadoActual = SELECTEDVALUE(dimAbonados[Nombre comercial open])
+VAR Envios2024 = CALCULATE(
+    DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío]),
+    FILTER(
+        'CARPETA DATOS CLIENTES',
+        YEAR('CARPETA DATOS CLIENTES'[Fecha envío]) = 2024
+    )
+)
+VAR Envios2025 = CALCULATE(
+    DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío]),
+    FILTER(
+        'CARPETA DATOS CLIENTES',
+        YEAR('CARPETA DATOS CLIENTES'[Fecha envío]) = 2025
+    )
+)
+VAR EsMasDeUnEnvio = Envios2024 > 1
+VAR Importe2024 = CALCULATE(
+    [Importe Total Dinámico],
+    FILTER(
+        'CARPETA DATOS CLIENTES',
+        YEAR('CARPETA DATOS CLIENTES'[Fecha envío]) = 2024
+    )
+)
+RETURN
+    IF(
+        EsMasDeUnEnvio && Envios2024 > 0 && Envios2025 = 0,
+        Importe2024,
+        BLANK()
+    )
+
+EVALUATE
+    SUMMARIZECOLUMNS(
+        "Importe_Total_Dinamico_2024_NoActivos2025", [Importe_Total_Dinamico_2024_NoActivos2025]
+    )
