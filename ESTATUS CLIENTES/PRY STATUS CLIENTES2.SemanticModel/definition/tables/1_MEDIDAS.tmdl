@@ -1313,7 +1313,10 @@ table 1_MEDIDAS
 			VAR EsMasDeUnEnvio = Envios2024 > 1
 			RETURN
 			    IF(
-		        EsMasDeUnEnvio && Envios2024 > 0 && Envios2025 = 0,
+			        AND(EsMasDeUnEnvio, Envios2024 > 0, Envios2025 = 0),
+			        Envios2024,
+			        BLANK()
+			    )
 		displayFolder: Análisis 2024-2025
 		lineageTag: 5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t
 
@@ -1345,7 +1348,7 @@ table 1_MEDIDAS
 			)
 			RETURN
 			    IF(
-			        EsMasDeUnEnvio && Envios2024 > 0 && Envios2025 = 0,
+			        AND(EsMasDeUnEnvio, Envios2024 > 0, Envios2025 = 0),
 			        Importe2024,
 			        BLANK()
 			    )
