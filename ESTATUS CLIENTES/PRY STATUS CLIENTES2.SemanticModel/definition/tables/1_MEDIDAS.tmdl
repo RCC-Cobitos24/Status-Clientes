@@ -1223,16 +1223,13 @@ table 1_MEDIDAS
 
 	measure 'Importe Total (Histórico)' =
 			
-			IFERROR(
-			    SUMX(
-			        SUMMARIZE(
-			            'CARPETA DATOS CLIENTES HISTÓRICO',
-			            'CARPETA DATOS CLIENTES HISTÓRICO'[Número envío],
-			            "TotalPorEnvio", MAXX(CURRENTGROUP(), VALUE('CARPETA DATOS CLIENTES HISTÓRICO'[Total]))
-			        ),
-			        [TotalPorEnvio]
+			SUMX(
+			    SUMMARIZE(
+			        'CARPETA DATOS CLIENTES HISTÓRICO',
+			        'CARPETA DATOS CLIENTES HISTÓRICO'[Número envío],
+			        "TotalPorEnvio", MAX('CARPETA DATOS CLIENTES HISTÓRICO'[Total])
 			    ),
-			    0
+			    [TotalPorEnvio]
 			)
 		formatString: 0
 		displayFolder: Medidas Base
