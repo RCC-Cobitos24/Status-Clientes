@@ -1227,7 +1227,7 @@ table 1_MEDIDAS
 			    SUMMARIZE(
 			        'CARPETA DATOS CLIENTES HISTÓRICO',
 			        'CARPETA DATOS CLIENTES HISTÓRICO'[Número envío],
-			        "TotalPorEnvio", MAX('CARPETA DATOS CLIENTES HISTÓRICO'[Total])
+			        "TotalPorEnvio", VALUE(MAX('CARPETA DATOS CLIENTES HISTÓRICO'[Total]))
 			    ),
 			    [TotalPorEnvio]
 			)
