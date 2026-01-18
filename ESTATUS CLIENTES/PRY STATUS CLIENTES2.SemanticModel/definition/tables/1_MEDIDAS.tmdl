@@ -1313,7 +1313,7 @@ table 1_MEDIDAS
 			VAR EsMasDeUnEnvio = Envios2024 > 1
 			RETURN
 			    IF(
-			        AND(EsMasDeUnEnvio, Envios2024 > 0, Envios2025 = 0),
+			        EsMasDeUnEnvio && Envios2024 > 0 && Envios2025 = 0,
 			        Envios2024,
 			        BLANK()
 			    )
@@ -1348,7 +1348,7 @@ table 1_MEDIDAS
 			)
 			RETURN
 			    IF(
-			        AND(EsMasDeUnEnvio, Envios2024 > 0, Envios2025 = 0),
+			        EsMasDeUnEnvio && Envios2024 > 0 && Envios2025 = 0,
 			        Importe2024,
 			        BLANK()
 			    )
