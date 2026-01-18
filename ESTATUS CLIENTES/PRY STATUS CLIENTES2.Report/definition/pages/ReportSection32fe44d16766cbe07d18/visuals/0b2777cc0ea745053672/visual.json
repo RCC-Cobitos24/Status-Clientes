@@ -179,7 +179,7 @@
                     "Entity": "1_MEDIDAS"
                   }
                 },
-                "Property": "Nº Envios Reciente"
+                "Property": "Facturacion Inicial"
               }
             },
             "direction": "Descending"

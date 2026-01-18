@@ -1293,6 +1293,69 @@ table 1_MEDIDAS
 		displayFolder: Medidas Base
 		lineageTag: 014b296b-ce89-4eb3-958b-09635135a9bc
 
+	/// Total de envíos en 2024 para abonados sin actividad en 2025 (con >1 envío en 2024)
+	measure Total_Envios_2024_NoActivos2025 =
+			VAR AbonadoActual = SELECTEDVALUE(dimAbonados[Nombre comercial open])
+			VAR Envios2024 = CALCULATE(
+			    DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío]),
+			    FILTER(
+			        'CARPETA DATOS CLIENTES',
+			        YEAR('CARPETA DATOS CLIENTES'[Fecha envío]) = 2024
+			    )
+			)
+			VAR Envios2025 = CALCULATE(
+			    DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío]),
+			    FILTER(
+			        'CARPETA DATOS CLIENTES',
+			        YEAR('CARPETA DATOS CLIENTES'[Fecha envío]) = 2025
+			    )
+			)
+			VAR EsMasDeUnEnvio = Envios2024 > 1
+			RETURN
+			    IF(
+			        EsMasDeUnEnvio && Envios2024 > 0 && Envios2025 = 0,
+			        Envios2024,
+			        BLANK()
+			    )
+		displayFolder: Análisis 2024-2025
+		lineageTag: 5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t
+
+	/// Importe Total Dinámico facturado en 2024 para abonados sin actividad en 2025 (con >1 envío en 2024)
+	measure 'Importe_Total_Dinamico_2024_NoActivos2025' = ```
+			
+			VAR AbonadoActual = SELECTEDVALUE(dimAbonados[Nombre comercial open])
+			VAR Envios2024 = CALCULATE(
+			    DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío]),
+			    FILTER(
+			        'CARPETA DATOS CLIENTES',
+			        YEAR('CARPETA DATOS CLIENTES'[Fecha envío]) = 2024
+			    )
+			)
+			VAR Envios2025 = CALCULATE(
+			    DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío]),
+			    FILTER(
+			        'CARPETA DATOS CLIENTES',
+			        YEAR('CARPETA DATOS CLIENTES'[Fecha envío]) = 2025
+			    )
+			)
+			VAR EsMasDeUnEnvio = Envios2024 > 1
+			VAR Importe2024 = CALCULATE(
+			    [Importe Total Dinámico],
+			    FILTER(
+			        'CARPETA DATOS CLIENTES',
+			        YEAR('CARPETA DATOS CLIENTES'[Fecha envío]) = 2024
+			    )
+			)
+			RETURN
+			    IF(
+			        EsMasDeUnEnvio && Envios2024 > 0 && Envios2025 = 0,
+			        Importe2024,
+			        BLANK()
+			    )
+			```
+		displayFolder: Análisis 2024-2025
+		lineageTag: 6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u
+
 	partition 1_MEDIDAS = m
 		mode: import
 		source =
