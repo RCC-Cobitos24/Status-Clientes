@@ -57,20 +57,6 @@
                       "Entity": "1_MEDIDAS"
                     }
                   },
-                  "Property": "Importe Total Dinámico"
-                }
-              },
-              "queryRef": "1_MEDIDAS.Importe Total Dinámico",
-              "nativeQueryRef": "Importe Total Dinámico"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "1_MEDIDAS"
-                    }
-                  },
                   "Property": "Fac Año Anterior (a la fecha)"
                 }
               },
@@ -342,20 +328,6 @@
           },
           "selector": {
             "metadata": "1_MEDIDAS.Diferencia Cant"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "84.17683726271837D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "1_MEDIDAS.Importe Total Dinámico"
           }
         },
         {

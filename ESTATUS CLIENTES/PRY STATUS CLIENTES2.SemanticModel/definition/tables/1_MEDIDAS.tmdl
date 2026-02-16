@@ -1221,20 +1221,6 @@ table 1_MEDIDAS
 		displayFolder: Status Abonado
 		lineageTag: c8832987-6266-4a31-8056-f66357a5d72a
 
-	measure 'Importe Total (Histórico)' =
-			
-			SUMX(
-			    SUMMARIZE(
-			        'CARPETA DATOS CLIENTES HISTÓRICO',
-			        'CARPETA DATOS CLIENTES HISTÓRICO'[Número envío],
-			        "TotalPorEnvio", MAX('CARPETA DATOS CLIENTES HISTÓRICO'[Total])
-			    ),
-			    [TotalPorEnvio]
-			)
-		formatString: 0
-		displayFolder: Medidas Base
-		lineageTag: aab2a52b-bf8d-4861-9f90-72ff2f4f29f2
-
 	measure 'Importe Total Dinámico' = ```
 			
 			VAR PeriodoSeleccionado = SELECTEDVALUE(PeriodoDatos[Periodo])
@@ -1361,6 +1347,18 @@ table 1_MEDIDAS
 		lineageTag: 6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Importe Total (Histórico)' =
+			SUMX(
+			    SUMMARIZE(
+			        'CARPETA DATOS CLIENTES HISTÓRICO',
+			        'CARPETA DATOS CLIENTES HISTÓRICO'[Número envío],
+			        "TotalPorEnvio", MAX('CARPETA DATOS CLIENTES HISTÓRICO'[Total])
+			    ),
+			    VALUE([TotalPorEnvio])
+			)
+		formatString: 0
+		displayFolder: Medidas Base
 
 	partition 1_MEDIDAS = m
 		mode: import

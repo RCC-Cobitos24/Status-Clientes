@@ -176,6 +176,15 @@ table Fecha
 
 		annotation SummarizationSetBy = Automatic
 
+	column Periodo =
+			VAR CurrYear = YEAR(TODAY())
+			VAR Yr = 'Fecha'[Año]
+			RETURN
+			IF(Yr >= CurrYear - 1 && Yr <= CurrYear, "Actual",
+			   IF(Yr < CurrYear - 1, "Histórico", "Otros"))
+		dataType: string
+		lineageTag: 9f85f697-68bf-4e11-ba65-88c2ce5e2e08
+
 	partition Fecha = m
 		mode: import
 		source =
