@@ -23,27 +23,22 @@ table 1_MEDIDAS
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'Facturacion Reciente' =
-			
-			VAR _ultimafactura = CALCULATE(
-			                        MAX('CARPETA DATOS CLIENTES'[Fecha envío]),
-			                        REMOVEFILTERS('CARPETA DATOS CLIENTES')
-			                    )
-			VAR _inicioReciente = EOMONTH(
-			                        _ultimafactura,
-			                        -3
-			                    )+1
-			VAR _calculo =       CALCULATE(
-			                    [Importe Total],
-			                        KEEPFILTERS(
-			                            DATESBETWEEN(
-			                            Fecha[Fecha],
-			                            _inicioReciente,
-			                            _ultimafactura
-			                            )
-			                        )
-			                    )
-			
-			RETURN _calculo
+		/*  FACTURACIÓN RECIENTE
+		    Calcula la facturación total en los últimos 3 meses 
+		    a partir de la última fecha disponible en los datos. */
+		VAR UltimaFactura =
+		    CALCULATE(
+		        MAX('CARPETA DATOS CLIENTES'[Fecha envío]),
+		        ALL('CARPETA DATOS CLIENTES')          -- Rompe todos los filtros de la tabla
+		    )
+		VAR InicioReciente =
+		    EOMONTH(UltimaFactura, -3) + 1          -- Primer día del periodo de 3 meses
+		RETURN
+		CALCULATE(
+		    [Importe Total],
+		    DATESBETWEEN(Fecha[Fecha], InicioReciente, UltimaFactura)
+		    -- no se requiere KEEPFILTERS, el filtro de fechas reemplaza el contexto
+		)
 		displayFolder: Medidas Base
 		lineageTag: 4a3556b4-bb0d-4db9-8da4-98cc2bfc1715
 
