@@ -23,26 +23,26 @@ table 1_MEDIDAS
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'Facturacion Reciente' =
-		/*  FACTURACIÓN RECIENTE
-		    Calcula la facturación total en los últimos 3 meses 
-		    a partir de la última fecha disponible en los datos. */
-		VAR UltimaFactura =
-		    CALCULATE(
-		        MAX('CARPETA DATOS CLIENTES'[Fecha envío]),
-		        ALL('CARPETA DATOS CLIENTES')          -- Rompe todos los filtros de la tabla
-		    )
-		VAR InicioReciente =
-		    EOMONTH(UltimaFactura, -3) + 1          -- Primer día del periodo de 3 meses
-		RETURN
-		CALCULATE(
-		    [Importe Total],
-		    DATESBETWEEN(Fecha[Fecha], InicioReciente, UltimaFactura)
-		    -- no se requiere KEEPFILTERS, el filtro de fechas reemplaza el contexto
-		)
-		displayFolder: Medidas Base
-		lineageTag: 4a3556b4-bb0d-4db9-8da4-98cc2bfc1715
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+			/*  FACTURACIÓN RECIENTE
+			    Calcula la facturación total en los últimos 3 meses
+			    a partir de la última fecha disponible en los datos. */
+			VAR UltimaFactura =
+			    CALCULATE(
+			        MAX('CARPETA DATOS CLIENTES'[Fecha envío]),
+			        ALL('CARPETA DATOS CLIENTES')          -- Rompe todos los filtros de la tabla
+			    )
+			VAR InicioReciente =
+			    EOMONTH(UltimaFactura, -3) + 1          -- Primer día del periodo de 3 meses
+			RETURN
+			CALCULATE(
+			    [Importe Total],
+			    DATESBETWEEN(Fecha[Fecha], InicioReciente, UltimaFactura)
+			    -- no se requiere KEEPFILTERS, el filtro de fechas reemplaza el contexto
+			)
+			displayFolder: Medidas Base
+			lineageTag: 4a3556b4-bb0d-4db9-8da4-98cc2bfc1715
+			
+			annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'FactAnterior 6 meses' =
 			

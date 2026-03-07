@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
   "name": "79d35fa5286dd541666c",
   "position": {
     "x": 54.40514469453376,
@@ -191,6 +191,16 @@
                 {
                   "Literal": {
                     "Value": "2025L"
+                  }
+                }
+              ],
+              "isToggled": true
+            },
+            {
+              "identityValues": [
+                {
+                  "Literal": {
+                    "Value": "2024L"
                   }
                 }
               ],
