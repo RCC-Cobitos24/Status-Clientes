@@ -1,5 +1,4 @@
 table 1_MEDIDAS
-	lineageTag: cf560f61-3b6e-46d4-8bbc-8f711024695a
 
 	measure 'Total envios' = DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío])
 		formatString: 0
@@ -34,15 +33,14 @@ table 1_MEDIDAS
 			VAR InicioReciente =
 			    EOMONTH(UltimaFactura, -3) + 1          -- Primer día del periodo de 3 meses
 			RETURN
-			CALCULATE(
-			    [Importe Total],
-			    DATESBETWEEN(Fecha[Fecha], InicioReciente, UltimaFactura)
-			    -- no se requiere KEEPFILTERS, el filtro de fechas reemplaza el contexto
-			)
-			displayFolder: Medidas Base
-			lineageTag: 4a3556b4-bb0d-4db9-8da4-98cc2bfc1715
-			
-			annotation PBI_FormatHint = {"isGeneralNumber":true}
+			    CALCULATE(
+			        [Importe Total],
+			        DATESBETWEEN(Fecha[Fecha], InicioReciente, UltimaFactura)
+			    )
+		displayFolder: Medidas Base
+		lineageTag: 4a3556b4-bb0d-4db9-8da4-98cc2bfc1715
+		
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'FactAnterior 6 meses' =
 			
@@ -1354,6 +1352,23 @@ table 1_MEDIDAS
 			)
 		formatString: 0
 		displayFolder: Medidas Base
+
+	measure 'Top1 Comercial Mensual' =
+			CONCATENATEX(
+			    TOPN(
+			        1,
+			        SUMMARIZE(
+			            'CARPETA DATOS CLIENTES',
+			            dimAbonados[Nombre comercial open],
+			            "TotalFact", SUM('CARPETA DATOS CLIENTES'[Total])
+			        ),
+			        [TotalFact],
+			        DESC
+			    ),
+			    dimAbonados[Nombre comercial open] & " - " & FORMAT([TotalFact], "Currency"),
+			    ", "
+			)
+		displayFolder: TopN
 
 	partition 1_MEDIDAS = m
 		mode: import
