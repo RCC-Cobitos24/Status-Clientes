@@ -1,4 +1,5 @@
 table 1_MEDIDAS
+	lineageTag: d9318d94-0bbd-4309-9e5c-d82991d2cf6e
 
 	measure 'Total envios' = DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Número envío])
 		formatString: 0
@@ -39,7 +40,7 @@ table 1_MEDIDAS
 			    )
 		displayFolder: Medidas Base
 		lineageTag: 4a3556b4-bb0d-4db9-8da4-98cc2bfc1715
-		
+
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'FactAnterior 6 meses' =
@@ -1352,6 +1353,7 @@ table 1_MEDIDAS
 			)
 		formatString: 0
 		displayFolder: Medidas Base
+		lineageTag: fbc3448d-a558-47ef-bec1-69313c308cda
 
 	measure 'Top1 Comercial Mensual' =
 			CONCATENATEX(
@@ -1360,7 +1362,7 @@ table 1_MEDIDAS
 			        SUMMARIZE(
 			            'CARPETA DATOS CLIENTES',
 			            dimAbonados[Nombre comercial open],
-			            "TotalFact", SUM('CARPETA DATOS CLIENTES'[Total])
+			            "TotalFact", [Importe Total]
 			        ),
 			        [TotalFact],
 			        DESC
@@ -1369,6 +1371,7 @@ table 1_MEDIDAS
 			    ", "
 			)
 		displayFolder: TopN
+		lineageTag: cfa1a742-38b1-4a17-a081-3649f5514573
 
 	partition 1_MEDIDAS = m
 		mode: import

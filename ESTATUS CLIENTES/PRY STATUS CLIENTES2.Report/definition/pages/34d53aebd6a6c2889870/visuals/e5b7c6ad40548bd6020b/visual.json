@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.6.0/schema.json",
   "name": "e5b7c6ad40548bd6020b",
   "position": {
     "x": 37.041800643086816,
@@ -139,6 +139,16 @@
                               },
                               "Property": "Año"
                             }
+                          },
+                          {
+                            "Column": {
+                              "Expression": {
+                                "SourceRef": {
+                                  "Source": "f"
+                                }
+                              },
+                              "Property": "MesC"
+                            }
                           }
                         ],
                         "Values": [
@@ -146,6 +156,11 @@
                             {
                               "Literal": {
                                 "Value": "2025L"
+                              }
+                            },
+                            {
+                              "Literal": {
+                                "Value": "'Noviembre'"
                               }
                             }
                           ]
@@ -164,6 +179,16 @@
                               },
                               "Property": "Año"
                             }
+                          },
+                          {
+                            "Column": {
+                              "Expression": {
+                                "SourceRef": {
+                                  "Entity": "Fecha"
+                                }
+                              },
+                              "Property": "MesC"
+                            }
                           }
                         ],
                         "decomposedIdentities": {
@@ -174,6 +199,15 @@
                                   {
                                     "Literal": {
                                       "Value": "2025L"
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "1": [
+                                  {
+                                    "Literal": {
+                                      "Value": "'Noviembre'"
                                     }
                                   }
                                 ]
@@ -192,12 +226,25 @@
                                   "Property": "Año"
                                 }
                               }
+                            },
+                            {
+                              "value": {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Entity": "Fecha"
+                                    }
+                                  },
+                                  "Property": "MesC"
+                                }
+                              }
                             }
                           ]
                         },
                         "valueMap": [
                           {
-                            "0": "2025"
+                            "0": "2025",
+                            "1": "Noviembre"
                           }
                         ]
                       }

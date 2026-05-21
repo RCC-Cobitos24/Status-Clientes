@@ -4,5 +4,22 @@
   "displayName": "TOPN",
   "displayOption": "FitToPage",
   "height": 720,
-  "width": 1280
+  "width": 1280,
+  "visualInteractions": [
+    {
+      "source": "d74c5bf0a55960501bca",
+      "target": "07675216554ecb58d751",
+      "type": "NoFilter"
+    },
+    {
+      "source": "e5b7c6ad40548bd6020b",
+      "target": "07675216554ecb58d751",
+      "type": "NoFilter"
+    },
+    {
+      "source": "e5b7c6ad40548bd6020b",
+      "target": "b22ebed7b96b2ad36be5",
+      "type": "NoFilter"
+    }
+  ]
 }

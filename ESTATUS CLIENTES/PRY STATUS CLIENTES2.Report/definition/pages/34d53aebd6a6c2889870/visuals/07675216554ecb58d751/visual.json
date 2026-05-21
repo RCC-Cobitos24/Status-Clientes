@@ -1,0 +1,79 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.6.0/schema.json",
+  "name": "07675216554ecb58d751",
+  "position": {
+    "x": 712.887582659809,
+    "y": 137.31080088170464,
+    "z": 2001,
+    "height": 489.99265246142545,
+    "width": 461.77810433504783,
+    "tabOrder": 2001
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fecha"
+                    }
+                  },
+                  "Property": "AñoMesNum"
+                }
+              },
+              "queryRef": "Fecha.AñoMesNum",
+              "nativeQueryRef": "AñoMesNum",
+              "active": true
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "1_MEDIDAS"
+                    }
+                  },
+                  "Property": "Top1 Comercial Mensual"
+                }
+              },
+              "queryRef": "1_MEDIDAS.Top1 Comercial Mensual",
+              "nativeQueryRef": "Top1 Comercial Mensual"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "subTotals": [
+        {
+          "properties": {
+            "rowSubtotals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "columnSubtotals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
