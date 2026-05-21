@@ -12,19 +12,6 @@ table 1_MEDIDAS
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Top1 Comercial Mensual' =
-		VAR TablaMes =
-			SUMMARIZE(
-				'CARPETA DATOS CLIENTES',
-				dimAbonados[Nombre comercial open],
-				"TotalFact", SUM('CARPETA DATOS CLIENTES'[Total])
-			)
-		VAR Top = TOPN(1, TablaMes, [TotalFact], DESC)
-		RETURN
-			CONCATENATEX(Top, dimAbonados[Nombre comercial open] & " - " & FORMAT([TotalFact], "Currency"), ", ")
-		displayFolder: TopN
-		lineageTag: 11111111-1111-1111-1111-111111111111
-
 	measure Facturacion =
 			CALCULATE(
 			    [Total Facturado],
