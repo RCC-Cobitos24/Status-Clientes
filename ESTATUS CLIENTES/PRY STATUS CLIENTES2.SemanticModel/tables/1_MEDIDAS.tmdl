@@ -345,6 +345,138 @@ table 1_MEDIDAS
 		displayFolder: Medidas Base
 		lineageTag: 58819624-92aa-451b-ae1f-9993bda4fbd9
 
+	measure PeriodoSeleccionado =
+			VAR SeleccionPeriodo = SELECTEDVALUE(PeriodoDatos[Periodo], "Todos")
+			RETURN SeleccionPeriodo
+			formatString: 0
+			displayFolder: Medidas Dinámicas
+
+	measure TotalIngresos =
+			VAR SeleccionPeriodo = SELECTEDVALUE(PeriodoDatos[Periodo], "Todos")
+			RETURN
+				IF(
+					SeleccionPeriodo = "Actual",
+					SUMX('CARPETA DATOS CLIENTES', [Total]),
+					IF(
+						SeleccionPeriodo = "Histórico",
+						SUMX('CARPETA DATOS CLIENTES HISTÓRICO', [Total]),
+						SUMX('CARPETA DATOS CLIENTES', [Total]) +
+						SUMX('CARPETA DATOS CLIENTES HISTÓRICO', [Total])
+					)
+				)
+			formatString: 0
+			displayFolder: Medidas Dinámicas
+
+	measure TotalClientesUnicos =
+			VAR SeleccionPeriodo = SELECTEDVALUE(PeriodoDatos[Periodo], "Todos")
+			RETURN
+				IF(
+					SeleccionPeriodo = "Actual",
+					DISTINCTCOUNT('CARPETA DATOS CLIENTES'[Abonado]),
+					IF(
+						SeleccionPeriodo = "Histórico",
+						DISTINCTCOUNT('CARPETA DATOS CLIENTES HISTÓRICO'[Abonado]),
+						DISTINCTCOUNT(
+							UNION(
+								SELECTCOLUMNS('CARPETA DATOS CLIENTES', [Abonado]),
+								SELECTCOLUMNS('CARPETA DATOS CLIENTES HISTÓRICO', [Abonado])
+							)
+						)
+					)
+				)
+			formatString: 0
+			displayFolder: Medidas Dinámicas
+
+	measure TotalRegistros =
+			VAR SeleccionPeriodo = SELECTEDVALUE(PeriodoDatos[Periodo], "Todos")
+			RETURN
+				IF(
+					SeleccionPeriodo = "Actual",
+					COUNTROWS('CARPETA DATOS CLIENTES'),
+					IF(
+						SeleccionPeriodo = "Histórico",
+						COUNTROWS('CARPETA DATOS CLIENTES HISTÓRICO'),
+						COUNTROWS('CARPETA DATOS CLIENTES') +
+						COUNTROWS('CARPETA DATOS CLIENTES HISTÓRICO')
+					)
+				)
+			formatString: 0
+			displayFolder: Medidas Dinámicas
+
+	measure PromedioPorCliente =
+			DIVIDE([TotalIngresos], [TotalClientesUnicos])
+			formatString: 0
+			displayFolder: Medidas Dinámicas
+
+	measure VariacionAnual =
+			VAR SeleccionPeriodo = SELECTEDVALUE(PeriodoDatos[Periodo], "Todos")
+			VAR DatosActuales = [TotalIngresos]
+			VAR AñoActual = YEAR(MAX(Fecha[Fecha]))
+			VAR AñoAnterior = AñoActual - 1
+			VAR DatosAnteriores =
+				CALCULATE(
+					[TotalIngresos],
+					YEAR(Fecha[Fecha]) = AñoAnterior
+				)
+			RETURN
+				DIVIDE(DatosActuales - DatosAnteriores, DatosAnteriores, 0)
+			formatString: 0
+			displayFolder: Medidas Dinámicas
+
+	measure IndicadorPeriodo =
+			VAR SeleccionPeriodo = SELECTEDVALUE(PeriodoDatos[Periodo], "Todos")
+			RETURN
+				IF(
+					SeleccionPeriodo = "Actual",
+					"📊 ÚLTIMOS 2 AÑOS",
+					IF(
+						SeleccionPeriodo = "Histórico",
+						"📈 HISTÓRICO",
+						"🌍 TODOS LOS PERÍODOS"
+					)
+				)
+			displayFolder: Medidas Dinámicas
+
+	measure CantidadMesesPeriodo =
+			VAR SeleccionPeriodo = SELECTEDVALUE(PeriodoDatos[Periodo], "Todos")
+			VAR FechaMinima = MIN(Fecha[Fecha])
+			VAR FechaMaxima = MAX(Fecha[Fecha])
+			VAR DiferenciaFechas = DATEDIFF(FechaMinima, FechaMaxima, MONTH)
+			RETURN
+				IF(
+					SeleccionPeriodo = "Actual",
+					24,
+					IF(
+						SeleccionPeriodo = "Histórico",
+						DiferenciaFechas,
+						DiferenciaFechas
+					)
+				)
+			formatString: 0
+			displayFolder: Medidas Dinámicas
+
+	measure PromedioMensual =
+			DIVIDE([TotalIngresos], [CantidadMesesPeriodo], 0)
+			formatString: 0
+			displayFolder: Medidas Dinámicas
+
+	measure ValidacionDatos =
+			VAR SeleccionPeriodo = SELECTEDVALUE(PeriodoDatos[Periodo], "Todos")
+			VAR TotalActual = CALCULATE([TotalIngresos], PeriodoDatos[Periodo] = "Actual")
+			VAR TotalHistorico = CALCULATE([TotalIngresos], PeriodoDatos[Periodo] = "Histórico")
+			VAR TotalTodos = TotalActual + TotalHistorico
+			RETURN
+				IF(
+					SeleccionPeriodo = "Todos",
+					IF(
+						[TotalIngresos] = TotalTodos,
+						"✅ DATOS VÁLIDOS",
+						"❌ ERROR EN DATOS"
+					),
+					"ℹ️ PERÍODO FILTRADO"
+				)
+			displayFolder: Medidas Dinámicas
+
 	measure 'FactAnterior 12 meses' =
 			
 			VAR _ultimafactura = CALCULATE(
