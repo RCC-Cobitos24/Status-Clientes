@@ -1,0 +1,22 @@
+table AuxAbonadosyotros
+	lineageTag: 4cc8a7c3-acc5-4cf7-bbd5-b67f4906f81a
+
+	column 'Nombre comercial open'
+		lineageTag: a1093bf3-1f64-48e1-ad16-bbf348d1563e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: dimAbonados[Nombre comercial open]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition AuxAbonadosyotros = calculated
+		mode: import
+		source =
+				
+				UNION(
+				    DISTINCT(dimAbonados[Nombre comercial open]),
+				    {"OTROS"}
+				)
+
+	annotation PBI_Id = 325a557b36424f6699916e7e72ab27c2
+

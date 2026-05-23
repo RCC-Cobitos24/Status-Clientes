@@ -1,0 +1,26 @@
+table ValorTop
+	lineageTag: ef556ef9-eed7-415e-ae1a-71d621f940de
+
+	measure 'Valor de ValorTop' = SELECTEDVALUE('ValorTop'[ValorTop])
+		formatString: 0
+		lineageTag: 87fec0a2-0488-46d6-bbae-0d55be9c0439
+
+	column ValorTop
+		formatString: 0
+		lineageTag: d8b748b7-a610-4233-9c9c-b86b2e98e3d8
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = User
+
+	partition ValorTop = calculated
+		mode: import
+		source = GENERATESERIES(1, 25, 1)
+
+	annotation PBI_Id = c46849efc4e84849b3104dee3368bc15
+

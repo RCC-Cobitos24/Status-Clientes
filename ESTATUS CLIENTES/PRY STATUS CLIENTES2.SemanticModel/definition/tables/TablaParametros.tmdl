@@ -1,0 +1,23 @@
+table TablaParametros
+	lineageTag: b495ae71-2eb1-4e57-aafa-397c73358f82
+
+	column TablaParametros
+		dataType: string
+		lineageTag: 8f93ab55-1c8a-46cb-a02c-98e41c626b8b
+		summarizeBy: none
+		sourceColumn: TablaParametros
+
+		annotation SummarizationSetBy = Automatic
+
+	partition TablaParametros = m
+		mode: import
+		source =
+				let
+				    Origen = """#table(#(#)(cr)#(#)(lf)    {""""Parametro"""", """"Valor""""}, #(#)(cr)#(#)(lf)    {#(#)(cr)#(#)(lf)        {""""AñoIni"""", AñoIni}, #(#)(cr)#(#)(lf)        {""""AñoFin"""", AñoFin}#(#)(cr)#(#)(lf)    }#(#)(cr)#(#)(lf))"""
+				in
+				    Origen
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Text
+
