@@ -1,0 +1,19 @@
+-- Top 10 mejores mensajeros en la última semana con Entregas y Recogidas finalizadas
+
+DEFINE
+    VAR MaxWeek = MAXX(ALL(Fecha), Fecha[AñoSemanaNum])
+    VAR WeekFilter = FILTER(ALL(FacDatos1), RELATED(Fecha[AñoSemanaNum]) = MaxWeek)
+
+EVALUATE
+TOPN(
+    10,
+    GROUPBY(
+        WeekFilter,
+        FacDatos1[Usuario],
+        "Entregas", SUMX(CURRENTGROUP(), IF(FacDatos1[Estadística] = " Entregas finalizadas", FacDatos1[Valor], 0)),
+        "Recogidas", SUMX(CURRENTGROUP(), IF(FacDatos1[Estadística] = " Recogidas finalizadas", FacDatos1[Valor], 0)),
+        "Total", SUMX(CURRENTGROUP(), IF(FacDatos1[Estadística] IN {" Entregas finalizadas", " Recogidas finalizadas"}, FacDatos1[Valor], 0))
+    ),
+    [Total],
+    DESC
+)
