@@ -2,9 +2,7 @@
   "version": "1.0.0",
   "tabOrder": [
     "Consulta 1",
-    "Consulta 2",
-    "Consulta 3",
-    "Top10_Mensajeros_UltimaSemana"
+    "Consulta 2"
   ],
-  "defaultTab": "Consulta 3"
+  "defaultTab": "Consulta 2"
 }

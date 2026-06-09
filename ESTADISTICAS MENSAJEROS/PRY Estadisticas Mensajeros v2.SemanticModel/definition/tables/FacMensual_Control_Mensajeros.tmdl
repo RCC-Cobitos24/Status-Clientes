@@ -160,22 +160,6 @@ table FacMensual_Control_Mensajeros
 
 		annotation SummarizationSetBy = Automatic
 
-	column Horas_Ajustadas =
-			VAR HoraActual = HOUR(FacMensual_Control_Mensajeros[Hora-MInutos])
-			VAR ClavePorDefecto = CALCULATE(VALUES(TablaRangosHoras[ClaveHora]), FILTER(ALL(TablaRangosHoras), TablaRangosHoras[Rango] = "20-21"))
-			RETURN
-			IF(
-			    AND(HoraActual >= 8, HoraActual < 21),
-			    FacMensual_Control_Mensajeros[Horas],
-			    IFERROR(ClavePorDefecto, FacMensual_Control_Mensajeros[Horas])
-			)
-		dataType: int64
-		formatString: 0
-		lineageTag: a7f3d5b2-8c4e-5f9d-b1a6-7e2c3d9f1a4b
-		summarizeBy: none
-
-		annotation SummarizationSetBy = Automatic
-
 	partition FacMensual_Control_Mensajeros = m
 		mode: import
 		source =

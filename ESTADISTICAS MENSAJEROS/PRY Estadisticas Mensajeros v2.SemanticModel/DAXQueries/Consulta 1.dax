@@ -1,0 +1,39 @@
+-- Top 10 mejores mensajeros en la última semana con Entregas y Recogidas finalizadas
+
+DEFINE
+    VAR MaxWeek = MAXX(ALL(Fecha[Año], Fecha[SemanaNum]), Fecha[AñoSemanaNum])
+
+EVALUATE
+TOPN(
+    10,
+    ADDCOLUMNS(
+        SUMMARIZE(
+            FILTER(FacDatos1, Fecha[AñoSemanaNum] = MaxWeek),
+            'dimUsuario Mensajero'[Mensajero]
+        ),
+        "Entregas", 
+            SUMX(
+                FILTER(
+                    FacDatos1,
+                    Fecha[AñoSemanaNum] = MaxWeek
+                    && FacDatos1[Estadística] = " Entregas finalizadas"
+                    && 'dimUsuario Mensajero'[Mensajero] = EARLIER('dimUsuario Mensajero'[Mensajero])
+                ),
+                FacDatos1[Valor]
+            ),
+        "Recogidas",
+            SUMX(
+                FILTER(
+                    FacDatos1,
+                    Fecha[AñoSemanaNum] = MaxWeek
+                    && FacDatos1[Estadística] = " Recogidas finalizadas"
+                    && 'dimUsuario Mensajero'[Mensajero] = EARLIER('dimUsuario Mensajero'[Mensajero])
+                ),
+                FacDatos1[Valor]
+            ),
+        "Total",
+            [Entregas] + [Recogidas]
+    ),
+    [Total],
+    DESC
+)
