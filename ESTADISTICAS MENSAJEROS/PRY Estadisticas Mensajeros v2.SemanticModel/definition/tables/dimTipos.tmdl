@@ -21,7 +21,7 @@ table dimTipos
 		mode: import
 		source =
 				let
-				    Origen = Excel.Workbook(File.Contents("C:\Users\Usuario\Downloads\ESTADISTICAS\TABLA USUARIOS-MENSAJEROS\TABLA ESTADISTICAS.xlsx"), null, true),
+				    Origen = Excel.Workbook(File.Contents("C:\Users\rafac\Documents\PKM-RCC24\PROYECTOS\ESTADISTICAS\TABLA USUARIOS-MENSAJEROS\TABLA ESTADISTICAS.xlsx"), null, true),
 				    TIPOS_Sheet = Origen{[Item="TIPOS",Kind="Sheet"]}[Data],
 				    #"Encabezados promovidos" = Table.PromoteHeaders(TIPOS_Sheet, [PromoteAllScalars=true])
 				in

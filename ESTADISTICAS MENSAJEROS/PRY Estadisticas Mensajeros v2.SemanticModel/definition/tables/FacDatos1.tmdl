@@ -42,7 +42,7 @@ table FacDatos1
 		mode: import
 		source =
 				let
-				    Origen = Folder.Files("C:\Users\Usuario\Downloads\ESTADISTICAS\DATOS"),
+				    Origen = Folder.Files("C:\Users\rafac\Documents\PKM-RCC24\PROYECTOS\ESTADISTICAS\DATOS"),
 				    #"Otras columnas quitadas" = Table.SelectColumns(Origen,{"Content"}),
 				    #"Índice agregado" = Table.AddIndexColumn(#"Otras columnas quitadas", "Índice", 0, 1, Int64.Type),
 				    #"Función personalizada invocada" = Table.AddColumn(#"Índice agregado", "Funcion", each Funcion([Índice])),

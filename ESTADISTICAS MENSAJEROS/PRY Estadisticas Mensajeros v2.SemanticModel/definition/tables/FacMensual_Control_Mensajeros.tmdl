@@ -164,7 +164,7 @@ table FacMensual_Control_Mensajeros
 		mode: import
 		source =
 				let
-				    Origen = Folder.Files("C:\Users\Usuario\Downloads\ESTADISTICAS\DATOS CONTROL MENSAJEROS"),
+				    Origen = Folder.Files("C:\Users\rafac\Documents\PKM-RCC24\PROYECTOS\ESTADISTICAS\DATOS CONTROL MENSAJEROS"),
 				    #"Invocar función personalizada1" = Table.AddColumn(Origen, "Transformar archivo (2)", each #"Transformar archivo (2)"([Content])),
 				    #"Archivos ocultos filtrados1" = Table.SelectRows(#"Invocar función personalizada1", each [Attributes]?[Hidden]? <> true),
 				    #"Invocar función personalizada2" = Table.AddColumn(#"Archivos ocultos filtrados1", "Transformar archivo (3)", each #"Transformar archivo (3)"([Content])),

@@ -21,7 +21,7 @@ table dimEstadisticas
 		mode: import
 		source =
 				let
-				    Origen = Excel.Workbook(File.Contents("C:\Users\Usuario\Downloads\ESTADISTICAS\TABLA USUARIOS-MENSAJEROS\TABLA ESTADISTICAS.xlsx"), null, true),
+				    Origen = Excel.Workbook(File.Contents("C:\Users\rafac\Documents\PKM-RCC24\PROYECTOS\ESTADISTICAS\TABLA USUARIOS-MENSAJEROS\TABLA ESTADISTICAS.xlsx"), null, true),
 				    ESTADISTICAS_Sheet = Origen{[Item="ESTADISTICAS",Kind="Sheet"]}[Data],
 				    #"Encabezados promovidos" = Table.PromoteHeaders(ESTADISTICAS_Sheet, [PromoteAllScalars=true]),
 				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Encabezados promovidos",{{"Estadística", type text}, {"Tipo", type text}})

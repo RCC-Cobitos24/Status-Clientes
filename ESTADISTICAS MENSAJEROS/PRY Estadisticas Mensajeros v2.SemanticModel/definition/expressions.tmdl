@@ -70,7 +70,7 @@ expression FechaEspecial =
 expression Funcion =
 		(DIA)=>
 		let
-		    Origen = Folder.Files("C:\Users\Usuario\Downloads\ESTADISTICAS\DATOS"),
+		    Origen = Folder.Files("C:\Users\rafac\Documents\PKM-RCC24\PROYECTOS\ESTADISTICAS\DATOS"),
 		    #"Otras columnas quitadas" = Table.SelectColumns(Origen,{"Content"}),
 		    Content = #"Otras columnas quitadas"{DIA}[Content],
 		    #"Libro de Excel importado" = Excel.Workbook(Content),
@@ -89,7 +89,7 @@ expression Funcion =
 
 expression 'Archivo de ejemplo (2)' =
 		let
-		    Origen = Folder.Files("C:\Users\Usuario\Downloads\ESTADISTICAS\DATOS CONTROL MENSAJEROS"),
+		    Origen = Folder.Files("C:\Users\rafac\Documents\PKM-RCC24\PROYECTOS\ESTADISTICAS\DATOS CONTROL MENSAJEROS"),
 		    Navegación1 = Origen{0}[Content]
 		in
 		    Navegación1
@@ -97,6 +97,8 @@ expression 'Archivo de ejemplo (2)' =
 	queryGroup: 'Transformar archivo de DATOS CONTROL MENSAJEROS (2)\Consultas auxiliares'
 
 	annotation PBI_ResultType = Binary
+
+	annotation PBI_NavigationStepName = Navegación
 
 expression Parámetro2 = #"Archivo de ejemplo (2)" meta [IsParameterQuery=true, BinaryIdentifier=#"Archivo de ejemplo (2)", Type="Binary", IsParameterQueryRequired=true]
 	lineageTag: bea59ace-07ff-4a5d-82c4-c41cf2dc4775
@@ -136,7 +138,7 @@ expression 'Transformar archivo de ejemplo (3)' =
 
 expression 'Archivo de ejemplo (3)' =
 		let
-		    Origen = Folder.Files("C:\Users\Usuario\Downloads\ESTADISTICAS\DATOS CONTROL MENSAJEROS"),
+		    Origen = Folder.Files("C:\Users\rafac\Documents\PKM-RCC24\PROYECTOS\ESTADISTICAS\DATOS CONTROL MENSAJEROS"),
 		    #"Invocar función personalizada1" = Table.AddColumn(Origen, "Transformar archivo (2)", each #"Transformar archivo (2)"([Content])),
 		    Navegación1 = #"Invocar función personalizada1"{0}[Content]
 		in
